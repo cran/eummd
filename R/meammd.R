@@ -44,15 +44,23 @@
 #'                                computed (\code{pval=TRUE}). Otherwise, 
 #'                                it is set to \code{NA}.}
 #'             \item{\code{stat}}{The statistic of the test, which
-#'                                is only return whem \code{type="proj"},
+#'                                is only returned when \code{type="proj"},
 #'                                otherwise it is set to \code{NA}.}
 #'          }
 #'
+#' @references
+#'    Bodenham, D. A., and Kawahara, Y. (2023)
+#'    "euMMD: efficiently computing the MMD two-sample test statistic for 
+#'    univariate data." Statistics and Computing 33.5 (2023): 110.
+#' 
 #' @examples
-#'
 #' X <- matrix(c(1:12), ncol=2, byrow=TRUE)
 #' Y <- matrix(c(13:20), ncol=2, byrow=TRUE)
+#' # using the random projections method
 #' mmdList <- meammd(X=X, Y=Y, pval=TRUE, type="proj", numproj=50)
+#'
+#' # using the method were distances are computed to the various points 
+#' mmdList <- meammd(X=X, Y=Y, pval=TRUE, type="dist")
 #'
 #'
 #' @export 

@@ -55,37 +55,34 @@ of observations.
 }
 \details{
 First checks number of columns (dimension) are equal.
-Suppose matrix \code{X} has \code{n} rows and \code{d} columns,
-and matrix \code{Y} has \code{m} rows; checks that \code{Y}
-has \code{d} columns (if not, then throws error).
-Then flattens matrices to vectors (or, if \code{d=1}, they are
+Suppose matrix \eqn{X} has \eqn{n} rows and \eqn{d} columns,
+and matrix \eqn{Y} has \eqn{m} rows; checks that \eqn{Y}
+has \eqn{d} columns (if not, then throws error).
+Then flattens matrices to vectors (or, if \eqn{d=1}, they are
 already vectors.
-Then calls C++ method. If the first sample has \code{n}
-\code{d}-dimensional samples and the second sample has
-\code{m} \code{d}-dimensional samples, then the algorithm
-computes the statistic in \code{O( (n+m)^2 )} time.
+Then calls C++ method. If the first sample has \eqn{n}
+\eqn{d}-dimensional samples and the second sample has
+\eqn{m} \eqn{d}-dimensional samples, then the algorithm
+computes the statistic in \eqn{O((n+m)^2)} time.
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{     Median difference is as follows:
-}\if{html}{\out{</div>}}
+Median difference is as follows:
 
-\code{ m = median { ||x_i - x_j||_1; i=1, 2, ..., n+m, and j=1, 2,..., i } },
+\deqn{ m = \textrm{median} \{ \lVert x_i - x_j \rVert_1; \,\, i>j, \,\, 
+        i=1, 2,..., n+m,\,\,\textrm{ and } j=1, 2,..., i-1 \}, }
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{     where \code{||x_i - x_j||_1} is the 1-norm, and so if the data 
-     are \code{d}-dimensional then
-     
-     \code{ ||x_i - x_j||_1 = \sum_{k=1}^{d} |x_{i,k} - x_{j,k}| },
-     
-     and finally median heuristic is \code{beta = 1/m}.
-     This can be computed in \code{O( (n+m)^2 )} time.
-     NOTE: fix.
-     
-     The Laplacian kernel \code{k} is defined as 
-    
-     \code{ k(x,y) = \exp( -\beta ||x - y||_1  ) }.
+where \eqn{ \lVert x_i - x_j \rVert_1} is the 1-norm, and so if the data
+are \eqn{d}-dimensional then
 
-     Random seed is set for \code{std::mt19937} and \code{std::shuffle} 
-     in C++.
-}\if{html}{\out{</div>}}
+\deqn{ \lVert x_i - x_j \rVert_1 = \sum_{k=1}^{d} |x_{i,k} - x_{j,k}|, }
+
+and finally median heuristic is \code{beta = 1/m}.
+This can be computed in \eqn{O( (n+m)^2 )} time.
+
+The Laplacian kernel \eqn{k} is defined as
+
+\deqn{ k(x,y) = \exp( -\beta \lVert x_i - x_j \rVert_1 ). }
+
+Random seed is set for \code{std::mt19937} and \code{std::shuffle} in C++.
 }
 \examples{
 
@@ -93,5 +90,20 @@ X <- matrix(c(1:12), ncol=2, byrow=TRUE)
 Y <- matrix(c(13:20), ncol=2, byrow=TRUE)
 mmdList <- mmd(X=X, Y=Y, beta=0.1, pval=FALSE)
 
+#using median heuristic
+mmdList <- mmd(X=X, Y=Y, pval=FALSE)
 
+#using median heuristic and computing p-value
+mmdList <- mmd(X=X, Y=Y)
+\donttest{
+#using median heuristic and computing p-value
+#using 1000 permutations and seed 1 for reproducibility.
+mmdList <- mmd(X=X, Y=Y, numperm=1000, seednum=1)
+}
+
+}
+\references{
+Gretton, A., Borgwardt, K. M., Rasch M. J., Schölkopf, B. and Smola, A.
+(2012) "A kernel two-sample test." The Journal of Machine Learning Research
+13, no. 1, 723-773.
 }

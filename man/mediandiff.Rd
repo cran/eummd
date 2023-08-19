@@ -2,7 +2,7 @@
 % Please edit documentation in R/medianheuristic.R
 \name{mediandiff}
 \alias{mediandiff}
-\title{Compute the median difference}
+\title{Compute the median difference between pairs of values}
 \usage{
 mediandiff(X, Y = NULL, kernel = c("Laplacian", "Gaussian"), fast = FALSE)
 }
@@ -13,60 +13,70 @@ mediandiff(X, Y = NULL, kernel = c("Laplacian", "Gaussian"), fast = FALSE)
 
 \item{kernel}{String, either \code{"Laplacian"} or \code{"Gaussian"}.}
 
-\item{fast}{Boolean; if \code{TRUE} will run \code{O(N log N)} algorithm,
+\item{fast}{Boolean; if \code{TRUE} will run \eqn{O(N \log N)} algorithm,
 where \code{N = n + m},
-but if \code{FALSE} will run naive \code{O(N^2 log(N))} algorithm.}
+but if \code{FALSE} (default)
+will run naive \eqn{O(N^2 \log N)} algorithm.}
 }
 \value{
-a scalar, the median of all pairwise differences.
+A scalar, the median of all pairwise differences.
 }
 \description{
-Compute the median difference out of all differences between distinct
+Compute the median of all differences between distinct
 pairs in vectors or matrices.
 }
 \details{
 The median difference is defined as follows:
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{     Z is the combined X and Y values into a single vector.matrix.
-     Number of columns is the dimension, and these need to be equal 
-     for X and Y. Then
-}\if{html}{\out{</div>}}
+\eqn{Z} is the combined \eqn{X} and \eqn{Y} values into a single vector
+or matrix.
+Number of columns is the dimension, and these need to be equal
+for \eqn{X} and \eqn{Y}. Then, if the Laplacian kernel is used,
 
-\code{ m = median { ||z_i - z_j||_1; i=1, 2, ..., n+m, and j=1, 2,..., i } },
+\deqn{ m = \textrm{median} \{ \lVert x_i - x_j \rVert_1; \,\, i>j, \,\, 
+        i=1, 2,..., n+m,\,\,\textrm{ and } j=1, 2,..., i-1 \}, }
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{     where \code{||z_i - z_j||_1} is the 1-norm, and so if the data 
-     are \code{d}-dimensional then
-     
-     \code{ ||z_i - z_j||_1 = \sum_{k=1}^{d} |z_{i,k} - z_{j,k}| },
-     
-    The median heuristic is defined as \code{beta = 1/m}.
-     
-    Naive method will compute all distinct pairs, of which there are 
-    \code{N(N+1)/2} differences. These are then sorted using 
-    a O(N log(N)) algorithm, so overall \code{O(N^2 log(N))}. 
+where \eqn{||z_i - z_j||_1} is the 1-norm, and so if the data
+are \code{d}-dimensional then
 
-    The fast method is \code{O(N log N)} is from Croux and Rousseeuw (1992), 
-    which is based on Johnson and Mizoguchi (1978). 
-}\if{html}{\out{</div>}}
+\deqn{ \lVert z_i - z_j \rVert_1 = \sum_{k=1}^{d} |z_{i,k} - z_{j,k}|. }
+
+If the Gaussian kernel is specified, then the square of the two-norm is
+used.
+
+The median heuristic is defined as \code{beta = 1/m}.
+
+Naive method will compute all distinct pairs, of which there are
+\eqn{N(N+1)/2} differences. These are then sorted using
+a \eqn{O(N \log N)} algorithm, so overall \eqn{O(N^2 \log N)}.
+
+The fast method is \eqn{O(N \log N)} is from Croux and Rousseeuw (1992),
+which is based on Johnson and Mizoguchi (1978).
 }
 \examples{
 
 X <- c(7.1, 1.2, 4.3, 0.4)
 Y <- c(5.5, 2.6, 8.7)
+#using fast method, Laplacian kernel, loglinear in number of observations
 md <- mediandiff(X, Y, fast=TRUE)
+
+#using fast method, Gaussian kernel, loglinear in number of observations
+md <- mediandiff(X, Y, fast=TRUE, kernel="Gaussian")
+
+#using naive method (default), with Laplacian kernel
+md <- mediandiff(X, Y)
 
 }
 \references{
-\if{html}{\out{<div class="sourceCode">}}\preformatted{    Croux, C. and Rousseeuw, P. J. (1992), 
-    "Time-Efficient Algorithms for Two Highly Robust Estimators of Scale"
-    In Computational Statistics: Volume 1: Proceedings of the 10th 
-    Symposium on Computational Statistics (pp. 411-428).
+Croux, C. and Rousseeuw, P. J. (1992),
+"Time-Efficient Algorithms for Two Highly Robust Estimators of Scale"
+In Computational Statistics: Volume 1: Proceedings of the 10th
+Symposium on Computational Statistics (pp. 411-428).
 
-    Johnson, D.B., and Mizoguchi, T. (1978), 
-    "Selecting the Kth Element in X + Y and X_1 + X_2 + ... + X_m", 
-    SIAM Journal of Computing, 7, 147-153.
-}\if{html}{\out{</div>}}
+Johnson, D.B., and Mizoguchi, T. (1978),
+"Selecting the Kth Element in X + Y and X_1 + X_2 + ... + X_m",
+SIAM Journal of Computing, 7, 147-153.
 }
 \seealso{
-medianheuristic
+\code{medianheuristic}
 }

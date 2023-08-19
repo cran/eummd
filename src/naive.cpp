@@ -460,6 +460,12 @@ std::vector<double> cpp_mmd_gau_pval(double* X, double* Y,
     // pval = convertTwoSidedPvalueToOneSided(pval);
     pval =  1 - std::abs(1 - 2*pval) ;
 
+    // quick check for minimum possible p-value; avoids pval=0
+    // 1 / 2(numperm+1)
+    double pmin = 0.5 / (numperm+1.0);
+    if (pval < pmin)
+        pval = pmin;
+
     // return vector is first pval, then statistic
     returnvec.push_back(pval);
     returnvec.push_back(MMDstar);

@@ -37,6 +37,25 @@ test_that("mediandiff, lap default univ, fast", {
         expect_equal(ans, soln)
         })
 
+
+test_that("mediandiff, lap default univ, fast", {
+        X <- c(15.0, 23.2, 37.3, 41.4)
+        Y <- c(56.5, 68.6, 72.8)
+        ans <- mediandiff(X, Y, fast=TRUE)
+        soln <- 26.4
+        expect_equal(ans, soln)
+        })
+
+
+test_that("mediandiff, lap default univ, slow", {
+        X <- c(15.0, 23.2, 37.3, 41.4)
+        Y <- c(56.5, 68.6, 72.8)
+        ans <- mediandiff(X, Y, fast=FALSE)
+        soln <- 26.4
+        expect_equal(ans, soln)
+        })
+
+
 test_that("mediandiff, gau default univ, slow", {
         X <- c(7.1, 1.2, 4.3, 0.4)
         Y <- c(5.5, 2.6, 8.7)

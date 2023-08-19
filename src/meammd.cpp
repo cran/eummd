@@ -4,7 +4,6 @@
 
 #include "eummd.h"
 #include "medianHeuristic.h"
-// #include "cdf_base.h"
 
 
 // this projects a collection of multivariate observations

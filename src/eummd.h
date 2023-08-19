@@ -1,3 +1,7 @@
+#ifndef GUARD_eummd_h
+#define GUARD_eummd_h
+
+
 /* euMMD: Efficient univariate maximum mean discrepancy
  *
  * Fast Exact MMD for univariate vectors. Uses the Laplacian kernel.
@@ -37,14 +41,16 @@
  * 
  * @see lapKernSSD
  *
- * @return p-value for the MMD.
+ * @return A vector of three elements; the first is the p-value for the test, 
+ *         the second is the statistic and the the third is the value of beta 
+ *         used.
  */
 std::vector<double> cpp_eummd_pval_faster(std::vector<double> X, 
                                           std::vector<double> Y, 
                                          double beta, int numperm, int seednum);
 
 
-/* FastMMD calculation with cpp sort
+/* euMMD: calculation of statistic
  *
  * Fast Exact MMD for univariate vectors. Uses the Laplacian kernel.
  * Not passing by reference, because do not want to modify original values.
@@ -57,7 +63,8 @@ std::vector<double> cpp_eummd_pval_faster(std::vector<double> X,
  *
  * @see lapKernSSD
  *
- * @return The MMD between these two vectors.
+ * @return A vector of two elements; the first is the statistic and 
+ *         the second is the value of beta used.
  */
 std::vector<double> cpp_eummd(std::vector<double> X, 
                               std::vector<double> Y, 
@@ -80,3 +87,5 @@ double compute_eummd_faster(std::vector<double>::const_iterator Zstart,
                            std::vector<bool>::const_iterator permend, 
                            const double T4, 
                            const double beta);
+
+#endif

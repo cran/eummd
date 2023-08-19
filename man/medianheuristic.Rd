@@ -18,15 +18,15 @@ where \code{N = n + m},
 but if \code{FALSE} will run naive \code{O(N^2 log(N))} algorithm.}
 }
 \value{
-a scalar, the inverse of the median of all pairwise differences.
+A scalar, the inverse of the median of all pairwise differences.
 }
 \description{
-Computes the inverse of the median difference out of all differences
-between distinct pairs in vectors or matrices.
+Computes the inverse of the median difference of
+all distinct pairs in vectors or matrices.
 }
 \details{
 Computes median of differences \code{md} using \code{mediandiff}
-and then returns \code{1 / md}.
+and then returns \code{1 / md}. See \code{mediandiff} for details.
 }
 \examples{
 
@@ -34,8 +34,14 @@ X <- c(7.1, 1.2, 4.3, 0.4)
 Y <- c(5.5, 2.6, 8.7)
 mh <- medianheuristic(X, Y, kernel="Laplacian", fast=TRUE)
 
+#using fast method, Gaussian kernel, loglinear in number of observations
+mh <- medianheuristic(X, Y, fast=TRUE, kernel="Gaussian")
+
+#using naive method (default), with Laplacian kernel
+mh <- medianheuristic(X, Y)
+
 
 }
 \seealso{
-mediandiff
+\code{mediandiff}
 }

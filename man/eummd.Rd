@@ -2,7 +2,7 @@
 % Please edit documentation in R/eummd.R
 \name{eummd}
 \alias{eummd}
-\title{euMMD: Effiicient Univariate Maximum Mean Discrepancy}
+\title{euMMD: Efficient Univariate Maximum Mean Discrepancy}
 \usage{
 eummd(x, y, beta = -0.1, pval = TRUE, numperm = 200, seednum = 0)
 }
@@ -38,48 +38,72 @@ value.}
 }
 }
 \description{
-Computes maximum mean discrepancy statistics with Laplacian kernel.
+Computes the maximum mean discrepancy statistic with the Laplacian kernel.
 Suitable only for univariate data. Computing the statistic alone
-for \code{n} observations is \code{O(n log n)}, and computing the
-p-value for \code{L} permutations is \code{O(n log n + Ln)}.
+for \eqn{n} observations is \eqn{O(n \log n)}, and computing the
+p-value for \eqn{L} permutations is \eqn{O(n \log n + Ln)}.
 }
 \details{
 If the total number of observations in both samples is \code{n},
 first sort combined sample in \code{O(n log n)} before remaining
 steps are linear in \code{n}.
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{     If \code{beta} is not a positive value, 
-     median difference is computed as follows:
-}\if{html}{\out{</div>}}
+If \code{beta} is not a positive value,
+median difference is computed as follows:
 
-\code{ m = median { ||x_i - x_j||_1; i=1, 2, ..., n+m, and j=1, 2,..., i } },
+\deqn{ m = \textrm{median} \{ \lVert x_i - x_j \rVert_1; \,\, i>j, \,\, 
+          i=1, 2,..., n+m,\,\,\textrm{ and } j=1, 2,..., i-1 \}, }
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{     where \code{||x_i - x_j||_1} is the 1-norm, and so if the data 
-     are univariate then
-     
-     \code{ ||x_i - x_j||_1 = |x_{i} - x_{j}| },
-     
-     and finally median heuristic is \code{beta = 1/m}.
-     This can be computed in \code{O(n log n )} time
-     using the algorithms of Johnson and Mizoguchi (1978) 
-     and Croux and Rousseuw (1992); see \code{mediandiff}
-     for references.
-     
-     The Laplacian kernel \code{k} is defined as 
-    
-     \code{ k(x,y) = \exp( -\beta ||x - y||_1  ) }.
+where \eqn{ \lVert x_i - x_j \rVert_1} is the 1-norm, and
+so if the data are univariate then
 
-     Random seed is set for \code{std::mt19937} and \code{std::shuffle} 
-     in C++.
-}\if{html}{\out{</div>}}
+\deqn{ \lVert x_i - x_j \rVert_1 = |x_{i} - x_{j}|. }
+
+and finally median heuristic is \code{beta = 1/m}.
+This can be computed in \eqn{O(n \log n )} time
+using the algorithms of Johnson and Mizoguchi (1978)
+and Croux and Rousseuw (1992); see \code{mediandiff}
+for references.
+
+The Laplacian kernel \eqn{k} is defined as
+
+\deqn{ k(x,y) = \exp [ -\beta ||x - y||_1  ]. }
+
+The random seed is set for \code{std::mt19937} and \code{std::shuffle}
+in C++.
 }
 \examples{
-
 x <- c(7.1, 1.2, 4.3, 0.4)
 y <- c(5.5, 2.6, 8.7)
+#setting the kernel parameter to be 0.1; setting seed=1 for reproducibility
+mmd_list <- eummd(x, y, beta=0.1, seednum=1)
+
+#now using median heuristic (default)
 mmd_list <- eummd(x, y, seednum=1)
 
+#now not computing the p-value, only the statistic
+mmd_list <- eummd(x, y, pval=FALSE, seednum=1)
+\donttest{
+#now using a larger number of permutations 
+mmd_list <- eummd(x, y, numperm=1000, seednum=1)
+}
+
+
+}
+\references{
+Bodenham, D. A., and Kawahara, Y. (2023)
+"euMMD: efficiently computing the MMD two-sample test statistic for
+univariate data." Statistics and Computing 33.5 (2023): 110.
+
+Croux, C. and Rousseeuw, P. J. (1992),
+"Time-Efficient Algorithms for Two Highly Robust Estimators of Scale"
+In Computational Statistics: Volume 1: Proceedings of the 10th
+Symposium on Computational Statistics (pp. 411-428).
+
+Johnson, D.B., and Mizoguchi, T. (1978),
+"Selecting the Kth Element in X + Y and X_1 + X_2 + ... + X_m",
+SIAM Journal of Computing, 7, 147-153.
 }
 \seealso{
-mediandiff
+\code{mediandiff}
 }
