@@ -4,22 +4,22 @@
 #include<Rcpp.h>
 
 
-Rcpp::NumericVector mmd_lap_Rcpp(Rcpp::NumericVector X, 
-                                 Rcpp::NumericVector Y, 
-                                 Rcpp::IntegerVector nX_, 
-                                 Rcpp::IntegerVector dX_,
-                                 Rcpp::IntegerVector nY_, 
-                                 Rcpp::IntegerVector dY_,
-                                 Rcpp::NumericVector beta_);
+Rcpp::List mmd_lap_Rcpp(Rcpp::NumericVector X, 
+                        Rcpp::NumericVector Y, 
+                        Rcpp::IntegerVector nX_, 
+                        Rcpp::IntegerVector dX_,
+                        Rcpp::IntegerVector nY_, 
+                        Rcpp::IntegerVector dY_,
+                        Rcpp::NumericVector beta_);
 
 
-Rcpp::NumericVector mmd_gau_Rcpp(Rcpp::NumericVector X, 
-                                 Rcpp::NumericVector Y, 
-                                 Rcpp::IntegerVector nX_, 
-                                 Rcpp::IntegerVector dX_,
-                                 Rcpp::IntegerVector nY_, 
-                                 Rcpp::IntegerVector dY_,
-                                 Rcpp::NumericVector beta_);
+Rcpp::List mmd_gau_Rcpp(Rcpp::NumericVector X, 
+                        Rcpp::NumericVector Y, 
+                        Rcpp::IntegerVector nX_, 
+                        Rcpp::IntegerVector dX_,
+                        Rcpp::IntegerVector nY_, 
+                        Rcpp::IntegerVector dY_,
+                        Rcpp::NumericVector beta_);
 
 Rcpp::List mmd_lap_pval_Rcpp(Rcpp::NumericVector X, 
                              Rcpp::NumericVector Y, 
@@ -96,5 +96,22 @@ double meammd_dist_pval_Rcpp(Rcpp::NumericVector X,
                              Rcpp::NumericVector beta_, 
                              Rcpp::NumericVector pmethod_, 
                              Rcpp::NumericVector nmethod_);
+
+Rcpp::List energydist_Rcpp(Rcpp::NumericVector X, 
+                           Rcpp::NumericVector Y, 
+                           Rcpp::IntegerVector nX_, 
+                           Rcpp::IntegerVector dX_,
+                           Rcpp::IntegerVector nY_, 
+                           Rcpp::IntegerVector dY_);
+
+
+Rcpp::List energydist_pval_Rcpp(Rcpp::NumericVector X, 
+                                Rcpp::NumericVector Y, 
+                                Rcpp::IntegerVector nX_, 
+                                Rcpp::IntegerVector dX_,
+                                Rcpp::IntegerVector nY_, 
+                                Rcpp::IntegerVector dY_,
+                                Rcpp::IntegerVector numperm_,
+                                Rcpp::IntegerVector seednum_);
 
 #endif

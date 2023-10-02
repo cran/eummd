@@ -1,7 +1,6 @@
-#' Naive computation for Maximum Mean Discrepancy
+#' Naive computation for Energy Distance 
 #'
-#' Computes maximum mean discrepancy statistics with Laplacian 
-#' or Gaussian kernel. 
+#' Computes energy distance, and possibly a p-value. 
 #' Suitable for multivariate data. Naive approach, quadratic in number
 #' of observations.
 #' 
@@ -9,15 +8,8 @@
 #' 
 #' @param Y Matrix (or vector) of observations in second sample.
 #' 
-#' @param beta kernel parameter. Must be positive; if not, computes
-#'             median heuristic in quadratic time. Default value
-#'             is \code{-0.1}, which will force median heuristic to be used.
-#' 
 #' @param pval Boolean for whether to compute p-value or not. 
 #' 
-#' @param kernel String, either \code{"Laplacian"} or \code{"Gaussian"}. 
-#'               Default is \code{"Laplacian"}.
-#'
 #' @param numperm Number of permutations. Default is \code{200}.
 #'
 #' @param seednum Seed number for generating permutations. Default is \code{0}, 
@@ -35,24 +27,6 @@
 #'          \eqn{m} \eqn{d}-dimensional samples, then the algorithm
 #'          computes the statistic in \eqn{O((n+m)^2)} time.
 #'          
-#'  Median difference is as follows:
-#'          
-#'  \deqn{ m = \textnormal{median} \{ || x_i - x_j ||_1; \,\, i>j, \,\, 
-#'         i=1, 2,\dots, n+m,\,\,\textnormal{ and } j=1, 2,\dots, i-1 \}, }
-#'    
-#'          
-#'  where \eqn{ || x_i - x_j ||_1} is the 1-norm, and so if the data 
-#'  are \eqn{d}-dimensional then
-#'          
-#'  \deqn{ || x_i - x_j ||_1 = \sum_{k=1}^{d} |x_{i,k} - x_{j,k}|, }
-#'          
-#'  and finally median heuristic is \code{beta = 1/m}.
-#'  This can be computed in \eqn{O( (n+m)^2 )} time.
-#'          
-#'  The Laplacian kernel \eqn{k} is defined as 
-#'         
-#'  \deqn{ k(x,y) = \exp( -\beta || x_i - x_j ||_1 ). }
-#'
 #'  Random seed is set for \code{std::mt19937} and \code{std::shuffle} in C++.
 #'
 #' @return A list with the following elements:
@@ -61,37 +35,31 @@
 #'                                computed (\code{pval=TRUE}). }
 #'             \item{\code{stat}}{The statistic of the test, which
 #'                                is always computed. }
-#'             \item{\code{beta}}{The kernel parameter used in the test.
-#'                                If \code{beta} was not initialised or
-#'                                negative, this will be the median heuristic
-#'                                value.}
 #'          }
 #'
 #' @references
-#'    Gretton, A., Borgwardt, K. M., Rasch M. J., Schölkopf, B. and Smola, A. 
-#'    (2012) "A kernel two-sample test." The Journal of Machine Learning Research 
-#'     13, no. 1, 723-773.
+#'    Baringhaus L. and Franz C. (2004) "On a new multivariate two-sample test." 
+#'    Journal of multivariate analysis 88(1):190-206
+#' 
+#'    Szekely G. J. and Rizzo M. L. (2004) "Testing for equal distributions in 
+#'    high dimension." InterStat 5(16.10):1249-1272
 #'
 #' @examples
 #'
 #' X <- matrix(c(1:12), ncol=2, byrow=TRUE)
 #' Y <- matrix(c(13:20), ncol=2, byrow=TRUE)
-#' mmdList <- mmd(X=X, Y=Y, beta=0.1, pval=FALSE)
+#' energydistList <- energydist(X=X, Y=Y, pval=FALSE)
 #'
-#' #using median heuristic
-#' mmdList <- mmd(X=X, Y=Y, pval=FALSE)
-#'
-#' #using median heuristic and computing p-value
-#' mmdList <- mmd(X=X, Y=Y)
+#' #computing p-value
+#' energydistList <- energydist(X=X, Y=Y)
 #' \donttest{
-#' #using median heuristic and computing p-value
+#' #computing p-value
 #' #using 1000 permutations and seed 1 for reproducibility.
-#' mmdList <- mmd(X=X, Y=Y, numperm=1000, seednum=1)
+#' energydistList <- energydist(X=X, Y=Y, numperm=1000, seednum=1)
 #' }
 #'
 #' @export
-mmd <- function(X, Y, beta=-0.1, pval=TRUE, kernel=c("Laplacian", "Gaussian"), 
-                numperm=200, seednum=0){
+energydist <- function(X, Y, pval=TRUE, numperm=200, seednum=0){
 
     # check vectors/matrices are numeric
     if ( !(is.numeric(X)) ){
@@ -99,12 +67,6 @@ mmd <- function(X, Y, beta=-0.1, pval=TRUE, kernel=c("Laplacian", "Gaussian"),
     }
     if ( !(is.numeric(Y)) ){
         stop("Y needs to be numeric.")
-    }
-
-    # check kernel is correct
-    kernel <- kernel[1]
-    if ( (kernel != "Laplacian") && (kernel != "Gaussian") ){
-        stop("kernel needs to be either 'Laplacian' or 'Gaussian'.")
     }
 
     # initialise, will update later
@@ -162,27 +124,18 @@ mmd <- function(X, Y, beta=-0.1, pval=TRUE, kernel=c("Laplacian", "Gaussian"),
 
     # if beta not positive, compute median heuristic (also from C++)
     # finally, compute MMD 
-    mmdList <- list()
-    if (kernel=="Gaussian"){
-        if (pval){
-            mmdList <- mmd_gau_pval_Rcpp(Xvec, Yvec, nX, dX, nY, dY, 
-                                         numperm, seednum, beta)
-        } else {
-            mmdList <- mmd_gau_Rcpp(Xvec, Yvec, nX, dX, nY, dY, beta)
-        }
+    energydistList <- list()
+    if (pval){
+        energyList <- energydist_pval_Rcpp(Xvec, Yvec, nX, dX, nY, dY, 
+                                           numperm, seednum)
     } else {
-        if (pval){
-            mmdList <- mmd_lap_pval_Rcpp(Xvec, Yvec, nX, dX, nY, dY, 
-                                         numperm, seednum, beta)
-        } else {
-            mmdList <- mmd_lap_Rcpp(Xvec, Yvec, nX, dX, nY, dY, beta)
-        }
+        energyList <- energydist_Rcpp(Xvec, Yvec, nX, dX, nY, dY)
     }
 
     # check pval; if no pval, functions return -1, then changes to NA
-    if (mmdList$pval < 0){
-        mmdList$pval <- NA
+    if (energyList$pval < 0){
+        energyList$pval <- NA
     }
-    return(mmdList)
+    return(energyList)
 }
 

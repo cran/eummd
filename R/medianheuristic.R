@@ -21,13 +21,13 @@
 #'    Number of columns is the dimension, and these need to be equal 
 #'    for \eqn{X} and \eqn{Y}. Then, if the Laplacian kernel is used,
 #'
-#'  \deqn{ m = \textrm{median} \{ \lVert x_i - x_j \rVert_1; \,\, i>j, \,\, 
-#'         i=1, 2,..., n+m,\,\,\textrm{ and } j=1, 2,..., i-1 \}, }
+#'  \deqn{ m = \textnormal{median} \{ || x_i - x_j ||_1; \,\, i>j, \,\, 
+#'         i=1, 2,\dots, n+m,\,\,\textnormal{ and } j=1, 2,\dots, i-1 \}, }
 #'          
-#'   where \eqn{||z_i - z_j||_1} is the 1-norm, and so if the data 
+#'   where \eqn{ || z_i - z_j ||_1} is the 1-norm, and so if the data 
 #'   are \code{d}-dimensional then
 #'          
-#'   \deqn{ \lVert z_i - z_j \rVert_1 = \sum_{k=1}^{d} |z_{i,k} - z_{j,k}|. }
+#'   \deqn{ || z_i - z_j ||_1 = \sum_{k=1}^{d} |z_{i,k} - z_{j,k}|. }
 #'        
 #'   If the Gaussian kernel is specified, then the square of the two-norm is 
 #'   used.

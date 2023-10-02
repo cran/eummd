@@ -26,5 +26,15 @@ std::vector<double> cpp_mmd_gau_pval(double* X, double* Y,
                                      double beta);
 
 
+double cpp_energydist(double* X, double* Y, 
+                      int nX, int dX,
+                      int nY, int dY);
+
+
+std::vector<double> cpp_energydist_pval(double* X, double* Y, 
+                                        int nX, int dX,
+                                        int nY, int dY,
+                                        int numperm, int seednum);
+
 #endif
 

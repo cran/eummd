@@ -67,20 +67,20 @@ computes the statistic in \eqn{O((n+m)^2)} time.
 
 Median difference is as follows:
 
-\deqn{ m = \textrm{median} \{ \lVert x_i - x_j \rVert_1; \,\, i>j, \,\, 
-        i=1, 2,..., n+m,\,\,\textrm{ and } j=1, 2,..., i-1 \}, }
+\deqn{ m = \textnormal{median} \{ || x_i - x_j ||_1; \,\, i>j, \,\, 
+        i=1, 2,\dots, n+m,\,\,\textnormal{ and } j=1, 2,\dots, i-1 \}, }
 
-where \eqn{ \lVert x_i - x_j \rVert_1} is the 1-norm, and so if the data
+where \eqn{ || x_i - x_j ||_1} is the 1-norm, and so if the data
 are \eqn{d}-dimensional then
 
-\deqn{ \lVert x_i - x_j \rVert_1 = \sum_{k=1}^{d} |x_{i,k} - x_{j,k}|, }
+\deqn{ || x_i - x_j ||_1 = \sum_{k=1}^{d} |x_{i,k} - x_{j,k}|, }
 
 and finally median heuristic is \code{beta = 1/m}.
 This can be computed in \eqn{O( (n+m)^2 )} time.
 
 The Laplacian kernel \eqn{k} is defined as
 
-\deqn{ k(x,y) = \exp( -\beta \lVert x_i - x_j \rVert_1 ). }
+\deqn{ k(x,y) = \exp( -\beta || x_i - x_j ||_1 ). }
 
 Random seed is set for \code{std::mt19937} and \code{std::shuffle} in C++.
 }

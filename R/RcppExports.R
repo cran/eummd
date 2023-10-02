@@ -45,3 +45,11 @@ meammd_dist_pval_Rcpp <- function(X, Y, nX_, dX_, nY_, dY_, numperm_, seednum_, 
     .Call(`_eummd_meammd_dist_pval_Rcpp`, X, Y, nX_, dX_, nY_, dY_, numperm_, seednum_, beta_, pmethod_, nmethod_)
 }
 
+energydist_Rcpp <- function(X, Y, nX_, dX_, nY_, dY_) {
+    .Call(`_eummd_energydist_Rcpp`, X, Y, nX_, dX_, nY_, dY_)
+}
+
+energydist_pval_Rcpp <- function(X, Y, nX_, dX_, nY_, dY_, numperm_, seednum_) {
+    .Call(`_eummd_energydist_pval_Rcpp`, X, Y, nX_, dX_, nY_, dY_, numperm_, seednum_)
+}
+

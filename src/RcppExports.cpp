@@ -195,6 +195,40 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// energydist_Rcpp
+Rcpp::List energydist_Rcpp(Rcpp::NumericVector X, Rcpp::NumericVector Y, Rcpp::IntegerVector nX_, Rcpp::IntegerVector dX_, Rcpp::IntegerVector nY_, Rcpp::IntegerVector dY_);
+RcppExport SEXP _eummd_energydist_Rcpp(SEXP XSEXP, SEXP YSEXP, SEXP nX_SEXP, SEXP dX_SEXP, SEXP nY_SEXP, SEXP dY_SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type X(XSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type nX_(nX_SEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type dX_(dX_SEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type nY_(nY_SEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type dY_(dY_SEXP);
+    rcpp_result_gen = Rcpp::wrap(energydist_Rcpp(X, Y, nX_, dX_, nY_, dY_));
+    return rcpp_result_gen;
+END_RCPP
+}
+// energydist_pval_Rcpp
+Rcpp::List energydist_pval_Rcpp(Rcpp::NumericVector X, Rcpp::NumericVector Y, Rcpp::IntegerVector nX_, Rcpp::IntegerVector dX_, Rcpp::IntegerVector nY_, Rcpp::IntegerVector dY_, Rcpp::IntegerVector numperm_, Rcpp::IntegerVector seednum_);
+RcppExport SEXP _eummd_energydist_pval_Rcpp(SEXP XSEXP, SEXP YSEXP, SEXP nX_SEXP, SEXP dX_SEXP, SEXP nY_SEXP, SEXP dY_SEXP, SEXP numperm_SEXP, SEXP seednum_SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type X(XSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type nX_(nX_SEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type dX_(dX_SEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type nY_(nY_SEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type dY_(dY_SEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type numperm_(numperm_SEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type seednum_(seednum_SEXP);
+    rcpp_result_gen = Rcpp::wrap(energydist_pval_Rcpp(X, Y, nX_, dX_, nY_, dY_, numperm_, seednum_));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_eummd_mmd_lap_Rcpp", (DL_FUNC) &_eummd_mmd_lap_Rcpp, 7},
@@ -208,6 +242,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_eummd_meammd_proj_Rcpp", (DL_FUNC) &_eummd_meammd_proj_Rcpp, 9},
     {"_eummd_meammd_proj_pval_Rcpp", (DL_FUNC) &_eummd_meammd_proj_pval_Rcpp, 10},
     {"_eummd_meammd_dist_pval_Rcpp", (DL_FUNC) &_eummd_meammd_dist_pval_Rcpp, 11},
+    {"_eummd_energydist_Rcpp", (DL_FUNC) &_eummd_energydist_Rcpp, 6},
+    {"_eummd_energydist_pval_Rcpp", (DL_FUNC) &_eummd_energydist_pval_Rcpp, 8},
     {NULL, NULL, 0}
 };
 

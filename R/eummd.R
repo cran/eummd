@@ -22,19 +22,19 @@
 #'                \code{0}, results will be reproducible.
 #' 
 #' @details If the total number of observations in both samples is \code{n}, 
-#'          first sort combined sample in \code{O(n log n)} before remaining
+#'          first sort combined sample in \eqn{O(n \log n)} before remaining
 #'          steps are linear in \code{n}.
 #' 
 #'    If \code{beta} is not a positive value, 
 #'    median difference is computed as follows:
 #'          
-#'    \deqn{ m = \textrm{median} \{ \lVert x_i - x_j \rVert_1; \,\, i>j, \,\, 
-#'           i=1, 2,..., n+m,\,\,\textrm{ and } j=1, 2,..., i-1 \}, }
+#'    \deqn{ m = \textnormal{median} \{ || x_i - x_j ||_1; \,\, i>j, \,\, 
+#'           i=1, 2,\dots, n+m,\,\,\textnormal{ and } j=1, 2,\dots, i-1 \}, }
 #'    
-#'    where \eqn{ \lVert x_i - x_j \rVert_1} is the 1-norm, and 
+#'    where \eqn{ || x_i - x_j ||_1} is the 1-norm, and 
 #'    so if the data are univariate then
 #'    
-#'    \deqn{ \lVert x_i - x_j \rVert_1 = |x_{i} - x_{j}|. }
+#'    \deqn{ || x_i - x_j ||_1 = |x_{i} - x_{j}|. }
 #'    
 #'    and finally median heuristic is \code{beta = 1/m}.
 #'    This can be computed in \eqn{O(n \log n )} time

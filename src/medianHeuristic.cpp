@@ -5,7 +5,9 @@
 //for std::size_t
 #include <cstddef>
 // for std::abs
-#include <cstdlib>
+//#include <cstdlib>
+// #include <math.h>
+#include <cmath>
 
 
 /**
@@ -870,7 +872,7 @@ double naive_multiv_medianHeuristic(const std::vector<double>& Z,
             for (std::size_t alpha=0; alpha < dZ; ++alpha){
                 diff = Z.at(Zindex.at(i)*dZ +alpha) - Z.at(Zindex.at(j)*dZ +alpha);
                 if (kmethod==1){
-                    arg += std::abs( diff ); 
+                    arg += std::fabs( diff ); 
                 } else {
                     arg += diff * diff;
                 }

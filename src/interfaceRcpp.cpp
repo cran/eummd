@@ -364,3 +364,58 @@ double meammd_dist_pval_Rcpp(Rcpp::NumericVector X,
 
     return(pval);
 }
+
+
+// [[Rcpp::export]]
+Rcpp::List energydist_Rcpp(Rcpp::NumericVector X, 
+                           Rcpp::NumericVector Y, 
+                           Rcpp::IntegerVector nX_, 
+                           Rcpp::IntegerVector dX_,
+                           Rcpp::IntegerVector nY_, 
+                           Rcpp::IntegerVector dY_){
+
+    // convert Rcpp types to primitive types
+    int nX = Rcpp::as<int> (nX_);
+    int dX = Rcpp::as<int> (dX_);
+    int nY = Rcpp::as<int> (nY_);
+    int dY = Rcpp::as<int> (dY_);
+
+    // call C++ function; double*s use pointer
+    double stat = cpp_energydist(X.begin(), Y.begin(), nX, dX, nY, dY);
+
+    //return( Rcpp::NumericVector::create(ans) );
+    return Rcpp::List::create(Rcpp::Named("stat") = stat, 
+                              Rcpp::Named("pval") = -1);
+}
+
+
+// [[Rcpp::export]]
+Rcpp::List energydist_pval_Rcpp(Rcpp::NumericVector X, 
+                                Rcpp::NumericVector Y, 
+                                Rcpp::IntegerVector nX_, 
+                                Rcpp::IntegerVector dX_,
+                                Rcpp::IntegerVector nY_, 
+                                Rcpp::IntegerVector dY_,
+                                Rcpp::IntegerVector numperm_,
+                                Rcpp::IntegerVector seednum_){
+
+    // convert Rcpp types to primitive types
+    int nX = Rcpp::as<int> (nX_);
+    int dX = Rcpp::as<int> (dX_);
+    int nY = Rcpp::as<int> (nY_);
+    int dY = Rcpp::as<int> (dY_);
+    int numperm = Rcpp::as<int> (numperm_);
+    int seednum = Rcpp::as<int> (seednum_);
+
+    // call C++ function; double*s use pointer; returns vector of two elements
+    std::vector<double> pvalstat = cpp_energydist_pval(X.begin(), Y.begin(), 
+                                                       nX, dX, nY, dY, 
+                                                       numperm, seednum);
+    // extract to doubles
+    double pval = pvalstat[0];
+    double stat = pvalstat[1];
+
+    //return( Rcpp::NumericVector::create(ans) );
+    return Rcpp::List::create(Rcpp::Named("stat") = stat, 
+                              Rcpp::Named("pval") = pval);
+}
