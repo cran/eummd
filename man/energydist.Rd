@@ -4,7 +4,15 @@
 \alias{energydist}
 \title{Naive computation for Energy Distance}
 \usage{
-energydist(X, Y, pval = TRUE, numperm = 200, seednum = 0)
+energydist(
+  X,
+  Y,
+  pval = TRUE,
+  numperm = 200,
+  seednum = 0,
+  alternative = c("greater", "two.sided"),
+  allowzeropval = FALSE
+)
 }
 \arguments{
 \item{X}{Matrix (or vector) of observations in first sample.}
@@ -18,6 +26,24 @@ energydist(X, Y, pval = TRUE, numperm = 200, seednum = 0)
 \item{seednum}{Seed number for generating permutations. Default is \code{0},
 which means seed is set randomly. For values larger than
 \code{0}, results will be reproducible.}
+
+\item{alternative}{A character string specifying the alternative hypothesis,
+which must be either \code{"greater"} (default) or
+\code{"two.sided"}. In Gretton et al., the
+MMD test statistic is specified so that if it is
+significantly larger than zero, then the null hypothesis
+that the two samples come from the same distribution
+should be rejected. For this reason, \code{"greater"}
+is recommended. The test will still work
+in many cases with \code{"two.sided"} specified, but this
+could lead to problems in certain cases.}
+
+\item{allowzeropval}{A boolean, specifying whether we will allow zero
+p-values or not. Default is \code{FALSE}; then
+a threshold of \code{0.5 / (numperm+1)} is used,
+and if the computed p-value is less than this
+threshold, it is then set to be this value.
+this avoids the possibility of zero p-values.}
 }
 \value{
 A list with the following elements:

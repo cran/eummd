@@ -19,18 +19,18 @@
  * 
  * @return C The merged vector, the sorted vector which is the merge of two other sorted vectors.
  */
-template <class vectype>
-vectype mergeTwoAlreadySorted(const vectype& A, const vectype& B){
+std::vector<double> mergeTwoAlreadySorted(std::vector<double>& A, 
+                                          std::vector<double>& B){
 
     // allocate space for C
-    typename vectype::size_type n = A.size() + B.size();
-    vectype C(n);
+    std::vector<double>::size_type n = A.size() + B.size();
+    std::vector<double> C(n);
 
     //iterators
-    typename vectype::const_iterator a_iter = A.begin();
-    typename vectype::const_iterator b_iter = B.begin();
+    std::vector<double>::const_iterator a_iter = A.begin();
+    std::vector<double>::const_iterator b_iter = B.begin();
     //iterator for C is not constant, because assigning values form A and B
-    typename vectype::iterator c_iter = C.begin();
+    std::vector<double>::iterator c_iter = C.begin();
     
     //Filling C while comparing A and B
     while (  (a_iter != A.end()) && (b_iter != B.end()) && (c_iter != C.end()) ){
@@ -61,6 +61,7 @@ vectype mergeTwoAlreadySorted(const vectype& A, const vectype& B){
     //return the merged vector
     return C;
 }
+
 
 
 
@@ -182,7 +183,8 @@ double compute_eummd_faster(std::vector<double>::const_iterator Zstart,
 
 std::vector<double> cpp_eummd_pval_faster(std::vector<double> X, 
                                           std::vector<double> Y, 
-                                         double beta, int numperm, int seednum){
+                                         double beta, int numperm, int seednum, 
+                                         int twosided, int boundedminpval){
 
 
     // return vector is first pval, then statistic
@@ -267,13 +269,24 @@ std::vector<double> cpp_eummd_pval_faster(std::vector<double> X,
     double pval = MMD_count_below / (numperm + 1.0);
 
     //make one-sided
-    pval =  1 - std::abs(1 - 2*pval) ;
+    //twosided = 0 means false
+    //twosided = 1 means true
+    if (twosided==1){
+        //make two sided
+        pval =  1 - std::abs(1 - 2*pval) ;
+    } else {
+        //one sided; counting below, so must make 
+        // large values into small
+        pval = 1 - pval;
+    }
 
     // quick check for minimum possible p-value; avoids pval=0
     // 1 / 2(numperm+1)
-    double pmin = 0.5 / (numperm+1.0);
-    if (pval < pmin)
-        pval = pmin;
+    if (boundedminpval==1){
+        double pmin = 0.5 / (numperm+1.0);
+        if (pval < pmin)
+            pval = pmin;
+    }
 
     // return vector is first pval, then statistic
     returnvec.push_back(pval);

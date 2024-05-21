@@ -47,7 +47,8 @@
  */
 std::vector<double> cpp_eummd_pval_faster(std::vector<double> X, 
                                           std::vector<double> Y, 
-                                         double beta, int numperm, int seednum);
+                                          double beta, int numperm, int seednum, 
+                                          int twosided, int boundedminpval);
 
 
 /* euMMD: calculation of statistic
@@ -72,8 +73,8 @@ std::vector<double> cpp_eummd(std::vector<double> X,
 
 
 // exposing for meammd
-template <class vectype>
-vectype mergeTwoAlreadySorted(const vectype& A, const vectype& B);
+// std::vector<double> mergeTwoAlreadySorted(std::vector<double>& A, 
+//                                           std::vector<double>& B);
 
 
 // exposing for meammd

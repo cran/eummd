@@ -17,13 +17,15 @@ std::vector<double> cpp_mmd_lap_pval(double* X, double* Y,
                                      int nX, int dX,
                                      int nY, int dY,
                                      int numperm, int seednum,
-                                     double beta);
+                                     double beta, 
+                                     int twosided, int boundedminpval);
 
 std::vector<double> cpp_mmd_gau_pval(double* X, double* Y, 
                                      int nX, int dX,
                                      int nY, int dY,
                                      int numperm, int seednum,
-                                     double beta);
+                                     double beta, 
+                                     int twosided, int boundedminpval);
 
 
 double cpp_energydist(double* X, double* Y, 
@@ -34,7 +36,7 @@ double cpp_energydist(double* X, double* Y,
 std::vector<double> cpp_energydist_pval(double* X, double* Y, 
                                         int nX, int dX,
                                         int nY, int dY,
-                                        int numperm, int seednum);
+                                        int numperm, int seednum,
+                                        int twosided, int boundedminpval);
 
 #endif
-

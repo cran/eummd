@@ -38,6 +38,24 @@
 #'                which means seed is set randomly. For values larger than 
 #'                \code{0}, results will be reproducible.
 #' 
+#' @param alternative A character string specifying the alternative hypothesis,
+#'                    which must be either \code{"greater"} (default) or
+#'                    \code{"two.sided"}. In Gretton et al., the 
+#'                    MMD test statistic is specified so that if it is 
+#'                    significantly larger than zero, then the null hypothesis
+#'                    that the two samples come from the same distribution 
+#'                    should be rejected. For this reason, \code{"greater"}
+#'                    is recommended. The test will still work 
+#'                    in many cases with \code{"two.sided"} specified, but this
+#'                    could lead to problems in certain cases.
+#'
+#' @param allowzeropval A boolean, specifying whether we will allow zero 
+#'                      p-values or not. Default is \code{FALSE}; then 
+#'                      a threshold of \code{0.5 / (numperm+1)} is used, 
+#'                      and if the computed p-value is less than this
+#'                      threshold, it is then set to be this value.
+#'                      this avoids the possibility of zero p-values.
+#'
 #' @return A list with the following elements:
 #'         \describe{
 #'             \item{\code{pval}}{The p-value of the test, if it is  
@@ -66,7 +84,8 @@
 #' @export 
 meammd <- function(X, Y, beta=-0.1, pval=TRUE, 
                    type=c("proj", "dist"), numproj=20, nmethod=c(2, 1),
-                   distpval=c("Hommel", "Fisher"), numperm=200, seednum=0){
+                   distpval=c("Hommel", "Fisher"), numperm=200, seednum=0, 
+                   alternative=c("greater", "two.sided"), allowzeropval=FALSE){
 
     # check vectors/matrices are numeric
     if ( !(is.numeric(X)) && !(is.matrix(X)) ){
@@ -124,6 +143,22 @@ meammd <- function(X, Y, beta=-0.1, pval=TRUE,
         stop("Dimension (number of columns) of matrices need to be equal.")
     }
 
+    # if alternative is 'greater', default
+    alternative <- alternative[1]
+    if ( (alternative != "greater") && (alternative != "two.sided") ){
+        stop("alternative needs to be either 'greater' or 'two.sided'.")
+    }
+
+    # two sided is false by default; false is 0
+    twosided <- 0
+    if (alternative == "two.sided")
+        twosided <- 1
+
+    # boundminpval is true by default; true is 1, false is 0
+    boundminpval <- 1
+    if (allowzeropval==TRUE)
+        boundminpval <- 0
+
 
     # flatten to vectors;  we use transpose
     # > X
@@ -148,7 +183,9 @@ meammd <- function(X, Y, beta=-0.1, pval=TRUE,
                                                 numperm, 
                                                 numproj, 
                                                 seednum, 
-                                                beta)
+                                                beta, 
+                                                twosided, 
+                                                boundminpval)
         } else {
             stat <- meammd_proj_Rcpp(Xvec, 
                                      Yvec,
@@ -170,7 +207,9 @@ meammd <- function(X, Y, beta=-0.1, pval=TRUE,
                                        seednum, 
                                        beta, 
                                        pmethod, 
-                                       nmethod)
+                                       nmethod,
+                                       twosided, 
+                                       boundminpval)
 
             meammdList$stat <- NA
             meammdList$pval <- pval

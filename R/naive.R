@@ -24,6 +24,24 @@
 #'                which means seed is set randomly. For values larger than 
 #'                \code{0}, results will be reproducible.
 #' 
+#' @param alternative A character string specifying the alternative hypothesis,
+#'                    which must be either \code{"greater"} (default) or
+#'                    \code{"two.sided"}. In Gretton et al., the 
+#'                    MMD test statistic is specified so that if it is 
+#'                    significantly larger than zero, then the null hypothesis
+#'                    that the two samples come from the same distribution 
+#'                    should be rejected. For this reason, \code{"greater"}
+#'                    is recommended. The test will still work 
+#'                    in many cases with \code{"two.sided"} specified, but this
+#'                    could lead to problems in certain cases.
+#'
+#' @param allowzeropval A boolean, specifying whether we will allow zero 
+#'                      p-values or not. Default is \code{FALSE}; then 
+#'                      a threshold of \code{0.5 / (numperm+1)} is used, 
+#'                      and if the computed p-value is less than this
+#'                      threshold, it is then set to be this value.
+#'                      this avoids the possibility of zero p-values.
+#'
 #' @details First checks number of columns (dimension) are equal. 
 #'          Suppose matrix \eqn{X} has \eqn{n} rows and \eqn{d} columns, 
 #'          and matrix \eqn{Y} has \eqn{m} rows; checks that \eqn{Y} 
@@ -91,7 +109,8 @@
 #'
 #' @export
 mmd <- function(X, Y, beta=-0.1, pval=TRUE, kernel=c("Laplacian", "Gaussian"), 
-                numperm=200, seednum=0){
+                numperm=200, seednum=0, alternative=c("greater", "two.sided"),
+                allowzeropval=FALSE){
 
     # check vectors/matrices are numeric
     if ( !(is.numeric(X)) ){
@@ -106,6 +125,22 @@ mmd <- function(X, Y, beta=-0.1, pval=TRUE, kernel=c("Laplacian", "Gaussian"),
     if ( (kernel != "Laplacian") && (kernel != "Gaussian") ){
         stop("kernel needs to be either 'Laplacian' or 'Gaussian'.")
     }
+
+    # if alternative is 'greater', default
+    alternative <- alternative[1]
+    if ( (alternative != "greater") && (alternative != "two.sided") ){
+        stop("alternative needs to be either 'greater' or 'two.sided'.")
+    }
+
+    # two sided is false by default; false is 0
+    twosided <- 0
+    if (alternative == "two.sided")
+        twosided <- 1
+
+    # boundminpval is true by default; true is 1, false is 0
+    boundminpval <- 1
+    if (allowzeropval==TRUE)
+        boundminpval <- 0
 
     # initialise, will update later
     nX <- 0
@@ -160,20 +195,23 @@ mmd <- function(X, Y, beta=-0.1, pval=TRUE, kernel=c("Laplacian", "Gaussian"),
     }
 
 
+
     # if beta not positive, compute median heuristic (also from C++)
     # finally, compute MMD 
     mmdList <- list()
     if (kernel=="Gaussian"){
         if (pval){
             mmdList <- mmd_gau_pval_Rcpp(Xvec, Yvec, nX, dX, nY, dY, 
-                                         numperm, seednum, beta)
+                                         numperm, seednum, beta, twosided, 
+                                         boundminpval)
         } else {
             mmdList <- mmd_gau_Rcpp(Xvec, Yvec, nX, dX, nY, dY, beta)
         }
     } else {
         if (pval){
             mmdList <- mmd_lap_pval_Rcpp(Xvec, Yvec, nX, dX, nY, dY, 
-                                         numperm, seednum, beta)
+                                         numperm, seednum, beta, twosided, 
+                                         boundminpval)
         } else {
             mmdList <- mmd_lap_Rcpp(Xvec, Yvec, nX, dX, nY, dY, beta)
         }

@@ -1,5 +1,11 @@
 # eummd
 
+## eummd 0.1.8, May 2024
+
+  - Added parameters `allowzeropval` and `alternative` 
+    for functions that compute p-values
+  - Fixed internal C++ function for merging two sorted vectors
+
 ## eummd 0.1.4, October 2023
 
   - Started `NEWS.md`.

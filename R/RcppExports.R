@@ -17,39 +17,39 @@ naive_median_diff_Rcpp <- function(Z_, nZ_, dZ_, kmethod_) {
     .Call(`_eummd_naive_median_diff_Rcpp`, Z_, nZ_, dZ_, kmethod_)
 }
 
-mmd_lap_pval_Rcpp <- function(X, Y, nX_, dX_, nY_, dY_, numperm_, seednum_, beta_) {
-    .Call(`_eummd_mmd_lap_pval_Rcpp`, X, Y, nX_, dX_, nY_, dY_, numperm_, seednum_, beta_)
+mmd_lap_pval_Rcpp <- function(X, Y, nX_, dX_, nY_, dY_, numperm_, seednum_, beta_, twosided_, boundedminpval_) {
+    .Call(`_eummd_mmd_lap_pval_Rcpp`, X, Y, nX_, dX_, nY_, dY_, numperm_, seednum_, beta_, twosided_, boundedminpval_)
 }
 
-mmd_gau_pval_Rcpp <- function(X, Y, nX_, dX_, nY_, dY_, numperm_, seednum_, beta_) {
-    .Call(`_eummd_mmd_gau_pval_Rcpp`, X, Y, nX_, dX_, nY_, dY_, numperm_, seednum_, beta_)
+mmd_gau_pval_Rcpp <- function(X, Y, nX_, dX_, nY_, dY_, numperm_, seednum_, beta_, twosided_, boundedminpval_) {
+    .Call(`_eummd_mmd_gau_pval_Rcpp`, X, Y, nX_, dX_, nY_, dY_, numperm_, seednum_, beta_, twosided_, boundedminpval_)
 }
 
 eummd_Rcpp <- function(X_, Y_, beta_) {
     .Call(`_eummd_eummd_Rcpp`, X_, Y_, beta_)
 }
 
-eummd_pval_Rcpp <- function(X_, Y_, beta_, numperm_, seednum_) {
-    .Call(`_eummd_eummd_pval_Rcpp`, X_, Y_, beta_, numperm_, seednum_)
+eummd_pval_Rcpp <- function(X_, Y_, beta_, numperm_, seednum_, twosided_, boundedminpval_) {
+    .Call(`_eummd_eummd_pval_Rcpp`, X_, Y_, beta_, numperm_, seednum_, twosided_, boundedminpval_)
 }
 
 meammd_proj_Rcpp <- function(X, Y, nX_, dX_, nY_, dY_, numproj_, seednum_, beta_) {
     .Call(`_eummd_meammd_proj_Rcpp`, X, Y, nX_, dX_, nY_, dY_, numproj_, seednum_, beta_)
 }
 
-meammd_proj_pval_Rcpp <- function(X, Y, nX_, dX_, nY_, dY_, numperm_, numproj_, seednum_, beta_) {
-    .Call(`_eummd_meammd_proj_pval_Rcpp`, X, Y, nX_, dX_, nY_, dY_, numperm_, numproj_, seednum_, beta_)
+meammd_proj_pval_Rcpp <- function(X, Y, nX_, dX_, nY_, dY_, numperm_, numproj_, seednum_, beta_, twosided_, boundedminpval_) {
+    .Call(`_eummd_meammd_proj_pval_Rcpp`, X, Y, nX_, dX_, nY_, dY_, numperm_, numproj_, seednum_, beta_, twosided_, boundedminpval_)
 }
 
-meammd_dist_pval_Rcpp <- function(X, Y, nX_, dX_, nY_, dY_, numperm_, seednum_, beta_, pmethod_, nmethod_) {
-    .Call(`_eummd_meammd_dist_pval_Rcpp`, X, Y, nX_, dX_, nY_, dY_, numperm_, seednum_, beta_, pmethod_, nmethod_)
+meammd_dist_pval_Rcpp <- function(X, Y, nX_, dX_, nY_, dY_, numperm_, seednum_, beta_, pmethod_, nmethod_, twosided_, boundedminpval_) {
+    .Call(`_eummd_meammd_dist_pval_Rcpp`, X, Y, nX_, dX_, nY_, dY_, numperm_, seednum_, beta_, pmethod_, nmethod_, twosided_, boundedminpval_)
 }
 
 energydist_Rcpp <- function(X, Y, nX_, dX_, nY_, dY_) {
     .Call(`_eummd_energydist_Rcpp`, X, Y, nX_, dX_, nY_, dY_)
 }
 
-energydist_pval_Rcpp <- function(X, Y, nX_, dX_, nY_, dY_, numperm_, seednum_) {
-    .Call(`_eummd_energydist_pval_Rcpp`, X, Y, nX_, dX_, nY_, dY_, numperm_, seednum_)
+energydist_pval_Rcpp <- function(X, Y, nX_, dX_, nY_, dY_, numperm_, seednum_, twosided_, boundedminpval_) {
+    .Call(`_eummd_energydist_pval_Rcpp`, X, Y, nX_, dX_, nY_, dY_, numperm_, seednum_, twosided_, boundedminpval_)
 }
 

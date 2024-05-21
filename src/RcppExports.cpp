@@ -70,8 +70,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // mmd_lap_pval_Rcpp
-Rcpp::List mmd_lap_pval_Rcpp(Rcpp::NumericVector X, Rcpp::NumericVector Y, Rcpp::IntegerVector nX_, Rcpp::IntegerVector dX_, Rcpp::IntegerVector nY_, Rcpp::IntegerVector dY_, Rcpp::IntegerVector numperm_, Rcpp::IntegerVector seednum_, Rcpp::NumericVector beta_);
-RcppExport SEXP _eummd_mmd_lap_pval_Rcpp(SEXP XSEXP, SEXP YSEXP, SEXP nX_SEXP, SEXP dX_SEXP, SEXP nY_SEXP, SEXP dY_SEXP, SEXP numperm_SEXP, SEXP seednum_SEXP, SEXP beta_SEXP) {
+Rcpp::List mmd_lap_pval_Rcpp(Rcpp::NumericVector X, Rcpp::NumericVector Y, Rcpp::IntegerVector nX_, Rcpp::IntegerVector dX_, Rcpp::IntegerVector nY_, Rcpp::IntegerVector dY_, Rcpp::IntegerVector numperm_, Rcpp::IntegerVector seednum_, Rcpp::NumericVector beta_, Rcpp::IntegerVector twosided_, Rcpp::IntegerVector boundedminpval_);
+RcppExport SEXP _eummd_mmd_lap_pval_Rcpp(SEXP XSEXP, SEXP YSEXP, SEXP nX_SEXP, SEXP dX_SEXP, SEXP nY_SEXP, SEXP dY_SEXP, SEXP numperm_SEXP, SEXP seednum_SEXP, SEXP beta_SEXP, SEXP twosided_SEXP, SEXP boundedminpval_SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -84,13 +84,15 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type numperm_(numperm_SEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type seednum_(seednum_SEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type beta_(beta_SEXP);
-    rcpp_result_gen = Rcpp::wrap(mmd_lap_pval_Rcpp(X, Y, nX_, dX_, nY_, dY_, numperm_, seednum_, beta_));
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type twosided_(twosided_SEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type boundedminpval_(boundedminpval_SEXP);
+    rcpp_result_gen = Rcpp::wrap(mmd_lap_pval_Rcpp(X, Y, nX_, dX_, nY_, dY_, numperm_, seednum_, beta_, twosided_, boundedminpval_));
     return rcpp_result_gen;
 END_RCPP
 }
 // mmd_gau_pval_Rcpp
-Rcpp::List mmd_gau_pval_Rcpp(Rcpp::NumericVector X, Rcpp::NumericVector Y, Rcpp::IntegerVector nX_, Rcpp::IntegerVector dX_, Rcpp::IntegerVector nY_, Rcpp::IntegerVector dY_, Rcpp::IntegerVector numperm_, Rcpp::IntegerVector seednum_, Rcpp::NumericVector beta_);
-RcppExport SEXP _eummd_mmd_gau_pval_Rcpp(SEXP XSEXP, SEXP YSEXP, SEXP nX_SEXP, SEXP dX_SEXP, SEXP nY_SEXP, SEXP dY_SEXP, SEXP numperm_SEXP, SEXP seednum_SEXP, SEXP beta_SEXP) {
+Rcpp::List mmd_gau_pval_Rcpp(Rcpp::NumericVector X, Rcpp::NumericVector Y, Rcpp::IntegerVector nX_, Rcpp::IntegerVector dX_, Rcpp::IntegerVector nY_, Rcpp::IntegerVector dY_, Rcpp::IntegerVector numperm_, Rcpp::IntegerVector seednum_, Rcpp::NumericVector beta_, Rcpp::IntegerVector twosided_, Rcpp::IntegerVector boundedminpval_);
+RcppExport SEXP _eummd_mmd_gau_pval_Rcpp(SEXP XSEXP, SEXP YSEXP, SEXP nX_SEXP, SEXP dX_SEXP, SEXP nY_SEXP, SEXP dY_SEXP, SEXP numperm_SEXP, SEXP seednum_SEXP, SEXP beta_SEXP, SEXP twosided_SEXP, SEXP boundedminpval_SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -103,7 +105,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type numperm_(numperm_SEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type seednum_(seednum_SEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type beta_(beta_SEXP);
-    rcpp_result_gen = Rcpp::wrap(mmd_gau_pval_Rcpp(X, Y, nX_, dX_, nY_, dY_, numperm_, seednum_, beta_));
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type twosided_(twosided_SEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type boundedminpval_(boundedminpval_SEXP);
+    rcpp_result_gen = Rcpp::wrap(mmd_gau_pval_Rcpp(X, Y, nX_, dX_, nY_, dY_, numperm_, seednum_, beta_, twosided_, boundedminpval_));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -121,8 +125,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // eummd_pval_Rcpp
-Rcpp::List eummd_pval_Rcpp(Rcpp::NumericVector X_, Rcpp::NumericVector Y_, Rcpp::NumericVector beta_, Rcpp::IntegerVector numperm_, Rcpp::IntegerVector seednum_);
-RcppExport SEXP _eummd_eummd_pval_Rcpp(SEXP X_SEXP, SEXP Y_SEXP, SEXP beta_SEXP, SEXP numperm_SEXP, SEXP seednum_SEXP) {
+Rcpp::List eummd_pval_Rcpp(Rcpp::NumericVector X_, Rcpp::NumericVector Y_, Rcpp::NumericVector beta_, Rcpp::IntegerVector numperm_, Rcpp::IntegerVector seednum_, Rcpp::IntegerVector twosided_, Rcpp::IntegerVector boundedminpval_);
+RcppExport SEXP _eummd_eummd_pval_Rcpp(SEXP X_SEXP, SEXP Y_SEXP, SEXP beta_SEXP, SEXP numperm_SEXP, SEXP seednum_SEXP, SEXP twosided_SEXP, SEXP boundedminpval_SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -131,7 +135,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type beta_(beta_SEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type numperm_(numperm_SEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type seednum_(seednum_SEXP);
-    rcpp_result_gen = Rcpp::wrap(eummd_pval_Rcpp(X_, Y_, beta_, numperm_, seednum_));
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type twosided_(twosided_SEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type boundedminpval_(boundedminpval_SEXP);
+    rcpp_result_gen = Rcpp::wrap(eummd_pval_Rcpp(X_, Y_, beta_, numperm_, seednum_, twosided_, boundedminpval_));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -155,8 +161,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // meammd_proj_pval_Rcpp
-Rcpp::List meammd_proj_pval_Rcpp(Rcpp::NumericVector X, Rcpp::NumericVector Y, Rcpp::IntegerVector nX_, Rcpp::IntegerVector dX_, Rcpp::IntegerVector nY_, Rcpp::IntegerVector dY_, Rcpp::IntegerVector numperm_, Rcpp::IntegerVector numproj_, Rcpp::IntegerVector seednum_, Rcpp::NumericVector beta_);
-RcppExport SEXP _eummd_meammd_proj_pval_Rcpp(SEXP XSEXP, SEXP YSEXP, SEXP nX_SEXP, SEXP dX_SEXP, SEXP nY_SEXP, SEXP dY_SEXP, SEXP numperm_SEXP, SEXP numproj_SEXP, SEXP seednum_SEXP, SEXP beta_SEXP) {
+Rcpp::List meammd_proj_pval_Rcpp(Rcpp::NumericVector X, Rcpp::NumericVector Y, Rcpp::IntegerVector nX_, Rcpp::IntegerVector dX_, Rcpp::IntegerVector nY_, Rcpp::IntegerVector dY_, Rcpp::IntegerVector numperm_, Rcpp::IntegerVector numproj_, Rcpp::IntegerVector seednum_, Rcpp::NumericVector beta_, Rcpp::IntegerVector twosided_, Rcpp::IntegerVector boundedminpval_);
+RcppExport SEXP _eummd_meammd_proj_pval_Rcpp(SEXP XSEXP, SEXP YSEXP, SEXP nX_SEXP, SEXP dX_SEXP, SEXP nY_SEXP, SEXP dY_SEXP, SEXP numperm_SEXP, SEXP numproj_SEXP, SEXP seednum_SEXP, SEXP beta_SEXP, SEXP twosided_SEXP, SEXP boundedminpval_SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -170,13 +176,15 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type numproj_(numproj_SEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type seednum_(seednum_SEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type beta_(beta_SEXP);
-    rcpp_result_gen = Rcpp::wrap(meammd_proj_pval_Rcpp(X, Y, nX_, dX_, nY_, dY_, numperm_, numproj_, seednum_, beta_));
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type twosided_(twosided_SEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type boundedminpval_(boundedminpval_SEXP);
+    rcpp_result_gen = Rcpp::wrap(meammd_proj_pval_Rcpp(X, Y, nX_, dX_, nY_, dY_, numperm_, numproj_, seednum_, beta_, twosided_, boundedminpval_));
     return rcpp_result_gen;
 END_RCPP
 }
 // meammd_dist_pval_Rcpp
-double meammd_dist_pval_Rcpp(Rcpp::NumericVector X, Rcpp::NumericVector Y, Rcpp::IntegerVector nX_, Rcpp::IntegerVector dX_, Rcpp::IntegerVector nY_, Rcpp::IntegerVector dY_, Rcpp::IntegerVector numperm_, Rcpp::IntegerVector seednum_, Rcpp::NumericVector beta_, Rcpp::NumericVector pmethod_, Rcpp::NumericVector nmethod_);
-RcppExport SEXP _eummd_meammd_dist_pval_Rcpp(SEXP XSEXP, SEXP YSEXP, SEXP nX_SEXP, SEXP dX_SEXP, SEXP nY_SEXP, SEXP dY_SEXP, SEXP numperm_SEXP, SEXP seednum_SEXP, SEXP beta_SEXP, SEXP pmethod_SEXP, SEXP nmethod_SEXP) {
+double meammd_dist_pval_Rcpp(Rcpp::NumericVector X, Rcpp::NumericVector Y, Rcpp::IntegerVector nX_, Rcpp::IntegerVector dX_, Rcpp::IntegerVector nY_, Rcpp::IntegerVector dY_, Rcpp::IntegerVector numperm_, Rcpp::IntegerVector seednum_, Rcpp::NumericVector beta_, Rcpp::NumericVector pmethod_, Rcpp::NumericVector nmethod_, Rcpp::IntegerVector twosided_, Rcpp::IntegerVector boundedminpval_);
+RcppExport SEXP _eummd_meammd_dist_pval_Rcpp(SEXP XSEXP, SEXP YSEXP, SEXP nX_SEXP, SEXP dX_SEXP, SEXP nY_SEXP, SEXP dY_SEXP, SEXP numperm_SEXP, SEXP seednum_SEXP, SEXP beta_SEXP, SEXP pmethod_SEXP, SEXP nmethod_SEXP, SEXP twosided_SEXP, SEXP boundedminpval_SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -191,7 +199,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type beta_(beta_SEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type pmethod_(pmethod_SEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type nmethod_(nmethod_SEXP);
-    rcpp_result_gen = Rcpp::wrap(meammd_dist_pval_Rcpp(X, Y, nX_, dX_, nY_, dY_, numperm_, seednum_, beta_, pmethod_, nmethod_));
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type twosided_(twosided_SEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type boundedminpval_(boundedminpval_SEXP);
+    rcpp_result_gen = Rcpp::wrap(meammd_dist_pval_Rcpp(X, Y, nX_, dX_, nY_, dY_, numperm_, seednum_, beta_, pmethod_, nmethod_, twosided_, boundedminpval_));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -212,8 +222,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // energydist_pval_Rcpp
-Rcpp::List energydist_pval_Rcpp(Rcpp::NumericVector X, Rcpp::NumericVector Y, Rcpp::IntegerVector nX_, Rcpp::IntegerVector dX_, Rcpp::IntegerVector nY_, Rcpp::IntegerVector dY_, Rcpp::IntegerVector numperm_, Rcpp::IntegerVector seednum_);
-RcppExport SEXP _eummd_energydist_pval_Rcpp(SEXP XSEXP, SEXP YSEXP, SEXP nX_SEXP, SEXP dX_SEXP, SEXP nY_SEXP, SEXP dY_SEXP, SEXP numperm_SEXP, SEXP seednum_SEXP) {
+Rcpp::List energydist_pval_Rcpp(Rcpp::NumericVector X, Rcpp::NumericVector Y, Rcpp::IntegerVector nX_, Rcpp::IntegerVector dX_, Rcpp::IntegerVector nY_, Rcpp::IntegerVector dY_, Rcpp::IntegerVector numperm_, Rcpp::IntegerVector seednum_, Rcpp::IntegerVector twosided_, Rcpp::IntegerVector boundedminpval_);
+RcppExport SEXP _eummd_energydist_pval_Rcpp(SEXP XSEXP, SEXP YSEXP, SEXP nX_SEXP, SEXP dX_SEXP, SEXP nY_SEXP, SEXP dY_SEXP, SEXP numperm_SEXP, SEXP seednum_SEXP, SEXP twosided_SEXP, SEXP boundedminpval_SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -225,7 +235,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type dY_(dY_SEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type numperm_(numperm_SEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type seednum_(seednum_SEXP);
-    rcpp_result_gen = Rcpp::wrap(energydist_pval_Rcpp(X, Y, nX_, dX_, nY_, dY_, numperm_, seednum_));
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type twosided_(twosided_SEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type boundedminpval_(boundedminpval_SEXP);
+    rcpp_result_gen = Rcpp::wrap(energydist_pval_Rcpp(X, Y, nX_, dX_, nY_, dY_, numperm_, seednum_, twosided_, boundedminpval_));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -235,15 +247,15 @@ static const R_CallMethodDef CallEntries[] = {
     {"_eummd_mmd_gau_Rcpp", (DL_FUNC) &_eummd_mmd_gau_Rcpp, 7},
     {"_eummd_fast_median_diff_Rcpp", (DL_FUNC) &_eummd_fast_median_diff_Rcpp, 1},
     {"_eummd_naive_median_diff_Rcpp", (DL_FUNC) &_eummd_naive_median_diff_Rcpp, 4},
-    {"_eummd_mmd_lap_pval_Rcpp", (DL_FUNC) &_eummd_mmd_lap_pval_Rcpp, 9},
-    {"_eummd_mmd_gau_pval_Rcpp", (DL_FUNC) &_eummd_mmd_gau_pval_Rcpp, 9},
+    {"_eummd_mmd_lap_pval_Rcpp", (DL_FUNC) &_eummd_mmd_lap_pval_Rcpp, 11},
+    {"_eummd_mmd_gau_pval_Rcpp", (DL_FUNC) &_eummd_mmd_gau_pval_Rcpp, 11},
     {"_eummd_eummd_Rcpp", (DL_FUNC) &_eummd_eummd_Rcpp, 3},
-    {"_eummd_eummd_pval_Rcpp", (DL_FUNC) &_eummd_eummd_pval_Rcpp, 5},
+    {"_eummd_eummd_pval_Rcpp", (DL_FUNC) &_eummd_eummd_pval_Rcpp, 7},
     {"_eummd_meammd_proj_Rcpp", (DL_FUNC) &_eummd_meammd_proj_Rcpp, 9},
-    {"_eummd_meammd_proj_pval_Rcpp", (DL_FUNC) &_eummd_meammd_proj_pval_Rcpp, 10},
-    {"_eummd_meammd_dist_pval_Rcpp", (DL_FUNC) &_eummd_meammd_dist_pval_Rcpp, 11},
+    {"_eummd_meammd_proj_pval_Rcpp", (DL_FUNC) &_eummd_meammd_proj_pval_Rcpp, 12},
+    {"_eummd_meammd_dist_pval_Rcpp", (DL_FUNC) &_eummd_meammd_dist_pval_Rcpp, 13},
     {"_eummd_energydist_Rcpp", (DL_FUNC) &_eummd_energydist_Rcpp, 6},
-    {"_eummd_energydist_pval_Rcpp", (DL_FUNC) &_eummd_energydist_pval_Rcpp, 8},
+    {"_eummd_energydist_pval_Rcpp", (DL_FUNC) &_eummd_energydist_pval_Rcpp, 10},
     {NULL, NULL, 0}
 };
 

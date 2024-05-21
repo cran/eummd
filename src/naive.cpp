@@ -244,7 +244,8 @@ double cpp_mmd_lap_ptr(std::vector<double> &Z,
 std::vector<double> cpp_mmd_lap_pval(double* X, double* Y, 
                                      int nX, int dX,
                                      int nY, int dY,
-                                     int numperm, int seednum, double beta){
+                                     int numperm, int seednum, double beta, 
+                                     int twosided, int boundedminpval){
 
     // return vector is first pval, then statistic
     std::vector<double> returnvec;
@@ -304,14 +305,24 @@ std::vector<double> cpp_mmd_lap_pval(double* X, double* Y,
     double pval = MMD_count_below / (numperm + 1.0);
 
     //make one-sided
-    // pval = convertTwoSidedPvalueToOneSided(pval);
-    pval =  1 - std::abs(1 - 2*pval) ;
+    //twosided = 0 means false
+    //twosided = 1 means true
+    if (twosided==1){
+        //make two sided
+        pval =  1 - std::abs(1 - 2*pval) ;
+    } else {
+        //one sided; counting below, so must make 
+        // large values into small
+        pval = 1 - pval;
+    }
 
     // quick check for minimum possible p-value; avoids pval=0
     // 1 / 2(numperm+1)
-    double pmin = 0.5 / (numperm+1.0);
-    if (pval < pmin)
-        pval = pmin;
+    if (boundedminpval==1){
+        double pmin = 0.5 / (numperm+1.0);
+        if (pval < pmin)
+            pval = pmin;
+    }
 
     // return vector is first pval, then statistic
     returnvec.push_back(pval);
@@ -398,7 +409,8 @@ double cpp_mmd_gau_ptr(std::vector<double> &Z,
 std::vector<double> cpp_mmd_gau_pval(double* X, double* Y, 
                                      int nX, int dX,
                                      int nY, int dY,
-                                     int numperm, int seednum, double beta){
+                                     int numperm, int seednum, double beta, 
+                                     int twosided, int boundedminpval){
 
     // return vector is first pval, then statistic
     std::vector<double> returnvec;
@@ -458,13 +470,22 @@ std::vector<double> cpp_mmd_gau_pval(double* X, double* Y,
 
     //make one-sided
     // pval = convertTwoSidedPvalueToOneSided(pval);
-    pval =  1 - std::abs(1 - 2*pval) ;
+    if (twosided==1){
+        //make two sided
+        pval =  1 - std::abs(1 - 2*pval) ;
+    } else {
+        //one sided; counting below, so must make 
+        // large values into small
+        pval = 1 - pval;
+    }
 
     // quick check for minimum possible p-value; avoids pval=0
     // 1 / 2(numperm+1)
-    double pmin = 0.5 / (numperm+1.0);
-    if (pval < pmin)
-        pval = pmin;
+    if (boundedminpval==1){
+        double pmin = 0.5 / (numperm+1.0);
+        if (pval < pmin)
+            pval = pmin;
+    }
 
     // return vector is first pval, then statistic
     returnvec.push_back(pval);
@@ -620,7 +641,8 @@ double cpp_energy_ptr(std::vector<double> &Z,
 std::vector<double> cpp_energydist_pval(double* X, double* Y, 
                                         int nX, int dX,
                                         int nY, int dY,
-                                        int numperm, int seednum){
+                                        int numperm, int seednum, 
+                                        int twosided, int boundedminpval){
 
     // return vector is first pval, then statistic
     std::vector<double> returnvec;
@@ -681,14 +703,24 @@ std::vector<double> cpp_energydist_pval(double* X, double* Y,
     double pval = energy_count_below / (numperm + 1.0);
 
     //make one-sided
-    // pval = convertTwoSidedPvalueToOneSided(pval);
-    pval =  1 - std::abs(1 - 2*pval) ;
+    //twosided = 0 means false
+    //twosided = 1 means true
+    if (twosided==1){
+        //make two sided
+        pval =  1 - std::abs(1 - 2*pval) ;
+    } else {
+        //one sided; counting below, so must make 
+        // large values into small
+        pval = 1 - pval;
+    }
 
     // quick check for minimum possible p-value; avoids pval=0
     // 1 / 2(numperm+1)
-    double pmin = 0.5 / (numperm+1.0);
-    if (pval < pmin)
-        pval = pmin;
+    if (boundedminpval==1){
+        double pmin = 0.5 / (numperm+1.0);
+        if (pval < pmin)
+            pval = pmin;
+    }
 
     // return vector is first pval, then statistic
     returnvec.push_back(pval);

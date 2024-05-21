@@ -21,6 +21,24 @@
 #'                which means seed is set randomly. For values larger than 
 #'                \code{0}, results will be reproducible.
 #' 
+#' @param alternative A character string specifying the alternative hypothesis,
+#'                    which must be either \code{"greater"} (default) or
+#'                    \code{"two.sided"}. In Gretton et al., the 
+#'                    MMD test statistic is specified so that if it is 
+#'                    significantly larger than zero, then the null hypothesis
+#'                    that the two samples come from the same distribution 
+#'                    should be rejected. For this reason, \code{"greater"}
+#'                    is recommended. The test will still work 
+#'                    in many cases with \code{"two.sided"} specified, but this
+#'                    could lead to problems in certain cases.
+#'
+#' @param allowzeropval A boolean, specifying whether we will allow zero 
+#'                      p-values or not. Default is \code{FALSE}; then 
+#'                      a threshold of \code{0.5 / (numperm+1)} is used, 
+#'                      and if the computed p-value is less than this
+#'                      threshold, it is then set to be this value.
+#'                      this avoids the possibility of zero p-values.
+#'
 #' @details If the total number of observations in both samples is \code{n}, 
 #'          first sort combined sample in \eqn{O(n \log n)} before remaining
 #'          steps are linear in \code{n}.
@@ -98,7 +116,8 @@
 #'
 #'
 #' @export
-eummd <- function(x, y, beta=-0.1, pval=TRUE, numperm=200, seednum=0){
+eummd <- function(x, y, beta=-0.1, pval=TRUE, numperm=200, seednum=0, 
+                  alternative=c("greater", "two.sided"), allowzeropval=FALSE){
 
     # check vectors are numeric
     if ( !(is.numeric(x)) || !(is.vector(x)) ){
@@ -108,9 +127,27 @@ eummd <- function(x, y, beta=-0.1, pval=TRUE, numperm=200, seednum=0){
         stop("y needs to be a numeric vector.")
     }
 
+    # if alternative is 'greater', default
+    alternative <- alternative[1]
+    if ( (alternative != "greater") && (alternative != "two.sided") ){
+        stop("alternative needs to be either 'greater' or 'two.sided'.")
+    }
+
+    # two sided is false by default; false is 0
+    twosided <- 0
+    if (alternative == "two.sided")
+        twosided <- 1
+
+    # boundminpval is true by default; true is 1, false is 0
+    boundminpval <- 1
+    if (allowzeropval==TRUE)
+        boundminpval <- 0
+
+
     mmdList <- list()
     if (pval){
-        mmdList <- eummd_pval_Rcpp(x, y, beta, numperm, seednum)
+        mmdList <- eummd_pval_Rcpp(x, y, beta, numperm, seednum, 
+                                   twosided, boundminpval)
     } else {
         mmdList <- eummd_Rcpp(x, y, beta)
     }

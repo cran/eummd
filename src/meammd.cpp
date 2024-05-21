@@ -6,6 +6,51 @@
 #include "medianHeuristic.h"
 
 
+std::vector<double> mergeTwoAlreadySortedTwo(std::vector<double>& A, 
+                                             std::vector<double>& B){
+
+    // allocate space for C
+    std::vector<double>::size_type n = A.size() + B.size();
+    std::vector<double> C(n);
+
+    //iterators
+    std::vector<double>::const_iterator a_iter = A.begin();
+    std::vector<double>::const_iterator b_iter = B.begin();
+    //iterator for C is not constant, because assigning values form A and B
+    std::vector<double>::iterator c_iter = C.begin();
+    
+    //Filling C while comparing A and B
+    while (  (a_iter != A.end()) && (b_iter != B.end()) && (c_iter != C.end()) ){
+        if ( (*a_iter) < (*b_iter) ){
+            *c_iter = *a_iter;
+            ++a_iter;
+        } else {
+            *c_iter = *b_iter;
+            ++b_iter;
+        }
+        ++c_iter;
+    }
+
+    //now fill in the rest
+    //only a *maximum* of one of these two while loops will run
+    //at least one of the iterators reached the end in the previous while
+    while ( (a_iter != A.end()) && (c_iter != C.end()) ){
+        *c_iter = *a_iter;
+        ++a_iter;
+        ++c_iter;
+    }
+    while ( (b_iter != B.end()) && (c_iter != C.end()) ){
+        *c_iter = *b_iter;
+        ++b_iter;
+        ++c_iter;
+    }
+
+    //return the merged vector
+    return C;
+}
+
+
+
 // this projects a collection of multivariate observations
 // to univariate observations
 std::vector<double> projection(const std::vector<double>& X, int n, int d, std::vector<double> u){
@@ -193,7 +238,7 @@ std::vector<double> cpp_meammd_proj_pval_faster_sub(std::vector<double>::const_i
 
     // merge two sorted vectors into Z
     // O(n)
-    std::vector<double> Zu = mergeTwoAlreadySorted(Xu, Yu);
+    std::vector<double> Zu = mergeTwoAlreadySortedTwo(Xu, Yu);
 
     // if beta is NOT a positive number, then compute using median heuristic
     // O(n log n)
@@ -283,7 +328,9 @@ std::vector<double> cpp_meammd_proj_pval_faster(double* X, double* Y,
                                                 int numperm, 
                                                 int numproj,
                                                 int seednum, 
-                                                double beta){
+                                                double beta, 
+                                                int twosided, 
+                                                int boundedminpval){
 
     // return vector is first pval, then statistic
     // there is no beta, because that depends on each projection
@@ -368,14 +415,24 @@ std::vector<double> cpp_meammd_proj_pval_faster(double* X, double* Y,
     double pval = MMD_count_below / (numperm + 1.0);
 
     //make one-sided
-    // pval = convertTwoSidedPvalueToOneSided(pval);
-    pval =  1 - std::abs(1 - 2*pval) ;
+    //twosided = 0 means false
+    //twosided = 1 means true
+    if (twosided==1){
+        //make two sided
+        pval =  1 - std::abs(1 - 2*pval) ;
+    } else {
+        //one sided; counting below, so must make 
+        // large values into small
+        pval = 1 - pval;
+    }
 
     // quick check for minimum possible p-value; avoids pval=0
     // 1 / 2(numperm+1)
-    double pmin = 0.5 / (numperm+1.0);
-    if (pval < pmin)
-        pval = pmin;
+    if (boundedminpval==1){
+        double pmin = 0.5 / (numperm+1.0);
+        if (pval < pmin)
+            pval = pmin;
+    }
 
     returnvec.push_back(pval);
     returnvec.push_back(MMDbar);
@@ -427,7 +484,7 @@ double emmd_ptr_alt_MH(std::vector<double>::const_iterator Zstart,
 
 
     //*next, merge the two sorted vectors into a third, sorted vector
-    std::vector<double> Z = mergeTwoAlreadySorted(X, Y);
+    std::vector<double> Z = mergeTwoAlreadySortedTwo(X, Y);
 
     // if beta is NOT a positive number, then compute using median heuristic
     if ( !(beta > 0) ){
@@ -474,7 +531,8 @@ double emmd_ptr_alt_MH(std::vector<double>::const_iterator Zstart,
 double emmd_pval_MH_alt(std::vector<double>::iterator Zstart, 
                         const std::vector<double>::size_type nX, 
                         const std::vector<double>::size_type nY, 
-                        int numperm, int seednum, double beta){
+                        int numperm, int seednum, double beta, 
+                        int twosided, int boundedminpval){
 
     std::vector<double>::iterator Zend = Zstart + nX + nY;
 
@@ -519,14 +577,25 @@ double emmd_pval_MH_alt(std::vector<double>::iterator Zstart,
     double pval = MMD_count_below / (numperm + 1.0);
 
     //make one-sided
-    // pval = convertTwoSidedPvalueToOneSided(pval);
-    pval =  1 - std::abs(1 - 2*pval) ;
+    //twosided = 0 means false
+    //twosided = 1 means true
+    if (twosided==1){
+        //make two sided
+        pval =  1 - std::abs(1 - 2*pval) ;
+    } else {
+        //one sided; counting below, so must make 
+        // large values into small
+        pval = 1 - pval;
+    }
 
     // quick check for minimum possible p-value; avoids pval=0
     // 1 / 2(numperm+1)
-    double pmin = 0.5 / (numperm+1.0);
-    if (pval < pmin)
-        pval = pmin;
+    if (boundedminpval==1){
+        double pmin = 0.5 / (numperm+1.0);
+        if (pval < pmin)
+            pval = pmin;
+    }
+
 
     return pval;
 }
@@ -590,7 +659,9 @@ double cpp_meammd_dist_pval(double* X, double* Y,
                         int seednum, 
                         double beta, 
                         int pmethod,
-                        int nmethod){
+                        int nmethod, 
+                        int twosided, 
+                        int boundedminpval){
 
     if (dX != dY){
         //error, dimensions incorrect
@@ -634,7 +705,8 @@ double cpp_meammd_dist_pval(double* X, double* Y,
             std::swap(Zdist[nX-1], Zdist[nZ-1]);
             // then will find emmd with X[1..nX-1], Y[1...nY]
             // (last elements are ignored)
-            p = emmd_pval_MH_alt(Zdist.begin(), nX-1, nY, numperm, seednum, beta);
+            p = emmd_pval_MH_alt(Zdist.begin(), nX-1, nY, numperm, seednum, beta, 
+                                 twosided, boundedminpval);
             
         } else {
             // j = i - nX;
@@ -642,7 +714,8 @@ double cpp_meammd_dist_pval(double* X, double* Y,
             std::swap(Zdist[i], Zdist[nZ-1]);
             // then will find emmd with X[1..nX], Y[1...nY-1]
             // (last elements are ignored)
-            p = emmd_pval_MH_alt(Zdist.begin(), nX, nY-1, numperm, seednum, beta);
+            p = emmd_pval_MH_alt(Zdist.begin(), nX, nY-1, numperm, seednum, beta, 
+                                 twosided, boundedminpval);
         }
         //p-value cannot be zero, must be at least 1/(numperm+1)
         pval[i] = p;

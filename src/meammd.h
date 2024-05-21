@@ -7,7 +7,9 @@ std::vector<double> cpp_meammd_proj_pval_faster(double* X, double* Y,
                                                 int numperm, 
                                                 int numproj,
                                                 int seednum, 
-                                                double beta);
+                                                double beta, 
+                                                int twosided, 
+                                                int boundedminpval);
 
 double cpp_meammd_dist_pval(double* X, double* Y, 
                         int nX, int dX,
@@ -16,7 +18,9 @@ double cpp_meammd_dist_pval(double* X, double* Y,
                         int seednum, 
                         double beta, 
                         int pmethod,
-                        int nmethod);
+                        int nmethod,
+                        int twosided, 
+                        int boundedminpval);
 
 
 double cpp_meammd_proj_stat(double* X, double* Y, 

@@ -15,6 +15,25 @@
 #' @param seednum Seed number for generating permutations. Default is \code{0}, 
 #'                which means seed is set randomly. For values larger than 
 #'                \code{0}, results will be reproducible.
+#'
+#'
+#' @param alternative A character string specifying the alternative hypothesis,
+#'                    which must be either \code{"greater"} (default) or
+#'                    \code{"two.sided"}. In Gretton et al., the 
+#'                    MMD test statistic is specified so that if it is 
+#'                    significantly larger than zero, then the null hypothesis
+#'                    that the two samples come from the same distribution 
+#'                    should be rejected. For this reason, \code{"greater"}
+#'                    is recommended. The test will still work 
+#'                    in many cases with \code{"two.sided"} specified, but this
+#'                    could lead to problems in certain cases.
+#'
+#' @param allowzeropval A boolean, specifying whether we will allow zero 
+#'                      p-values or not. Default is \code{FALSE}; then 
+#'                      a threshold of \code{0.5 / (numperm+1)} is used, 
+#'                      and if the computed p-value is less than this
+#'                      threshold, it is then set to be this value.
+#'                      this avoids the possibility of zero p-values.
 #' 
 #' @details First checks number of columns (dimension) are equal. 
 #'          Suppose matrix \eqn{X} has \eqn{n} rows and \eqn{d} columns, 
@@ -59,7 +78,9 @@
 #' }
 #'
 #' @export
-energydist <- function(X, Y, pval=TRUE, numperm=200, seednum=0){
+energydist <- function(X, Y, pval=TRUE, numperm=200, seednum=0, 
+                       alternative=c("greater", "two.sided"), 
+                       allowzeropval=FALSE){
 
     # check vectors/matrices are numeric
     if ( !(is.numeric(X)) ){
@@ -67,6 +88,23 @@ energydist <- function(X, Y, pval=TRUE, numperm=200, seednum=0){
     }
     if ( !(is.numeric(Y)) ){
         stop("Y needs to be numeric.")
+    }
+
+    # if alternative is 'greater', default
+    alternative <- alternative[1]
+    if ( (alternative != "greater") && (alternative != "two.sided") ){
+        stop("alternative needs to be either 'greater' or 'two.sided'.")
+    }
+
+    # two sided is false by default; false is 0
+    twosided <- 0
+    if (alternative == "two.sided")
+        twosided <- 1
+
+    # boundminpval is true by default; true is 1, false is 0
+    boundminpval <- 1
+    if (allowzeropval==TRUE){
+        boundminpval <- 0
     }
 
     # initialise, will update later
@@ -127,7 +165,8 @@ energydist <- function(X, Y, pval=TRUE, numperm=200, seednum=0){
     energydistList <- list()
     if (pval){
         energyList <- energydist_pval_Rcpp(Xvec, Yvec, nX, dX, nY, dY, 
-                                           numperm, seednum)
+                                           numperm, seednum, twosided,
+                                           boundminpval)
     } else {
         energyList <- energydist_Rcpp(Xvec, Yvec, nX, dX, nY, dY)
     }

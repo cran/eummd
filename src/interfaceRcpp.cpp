@@ -118,7 +118,9 @@ Rcpp::List mmd_lap_pval_Rcpp(Rcpp::NumericVector X,
                              Rcpp::IntegerVector dY_,
                              Rcpp::IntegerVector numperm_,
                              Rcpp::IntegerVector seednum_,
-                             Rcpp::NumericVector beta_){
+                             Rcpp::NumericVector beta_, 
+                             Rcpp::IntegerVector twosided_, 
+                             Rcpp::IntegerVector boundedminpval_){
 
     // convert Rcpp types to primitive types
     int nX = Rcpp::as<int> (nX_);
@@ -128,6 +130,11 @@ Rcpp::List mmd_lap_pval_Rcpp(Rcpp::NumericVector X,
     int numperm = Rcpp::as<int> (numperm_);
     int seednum = Rcpp::as<int> (seednum_);
     double beta = Rcpp::as<double> (beta_);
+
+    //twosided = 0 means false
+    int twosided = Rcpp::as<int> (twosided_);
+    int boundedminpval = Rcpp::as<int> (boundedminpval_);
+
     if ( !(beta > 0) ){
         std::vector<double> Z( X.begin(), X.end() );
         // insert Y
@@ -143,7 +150,8 @@ Rcpp::List mmd_lap_pval_Rcpp(Rcpp::NumericVector X,
     // call C++ function; double*s use pointer; returns vector of two elements
     std::vector<double> pvalstat = cpp_mmd_lap_pval(X.begin(), Y.begin(), 
                                                     nX, dX, nY, dY, 
-                                                    numperm, seednum, beta);
+                                                    numperm, seednum, beta, 
+                                                    twosided, boundedminpval);
     // extract to doubles
     double pval = pvalstat[0];
     double stat = pvalstat[1];
@@ -164,7 +172,9 @@ Rcpp::List mmd_gau_pval_Rcpp(Rcpp::NumericVector X,
                              Rcpp::IntegerVector dY_,
                              Rcpp::IntegerVector numperm_,
                              Rcpp::IntegerVector seednum_,
-                             Rcpp::NumericVector beta_){
+                             Rcpp::NumericVector beta_, 
+                             Rcpp::IntegerVector twosided_, 
+                             Rcpp::IntegerVector boundedminpval_){
 
     // convert Rcpp types to primitive types
     int nX = Rcpp::as<int> (nX_);
@@ -174,6 +184,8 @@ Rcpp::List mmd_gau_pval_Rcpp(Rcpp::NumericVector X,
     int numperm = Rcpp::as<int> (numperm_);
     int seednum = Rcpp::as<int> (seednum_);
     double beta = Rcpp::as<double> (beta_);
+    int twosided = Rcpp::as<int> (twosided_);
+    int boundedminpval = Rcpp::as<int> (boundedminpval_);
     if ( !(beta > 0) ){
         std::vector<double> Z( X.begin(), X.end() );
         // insert Y
@@ -189,7 +201,8 @@ Rcpp::List mmd_gau_pval_Rcpp(Rcpp::NumericVector X,
     // call C++ function; double*s use pointer; returns vector of two elements
     std::vector<double> pvalstat = cpp_mmd_gau_pval(X.begin(), Y.begin(), 
                                                     nX, dX, nY, dY, 
-                                                    numperm, seednum, beta);
+                                                    numperm, seednum, beta, 
+                                                    twosided, boundedminpval);
     // extract to doubles
     double pval = pvalstat[0];
     double stat = pvalstat[1];
@@ -231,7 +244,9 @@ Rcpp::List eummd_pval_Rcpp(Rcpp::NumericVector X_,
                            Rcpp::NumericVector Y_, 
                            Rcpp::NumericVector beta_,
                            Rcpp::IntegerVector numperm_,
-                           Rcpp::IntegerVector seednum_){
+                           Rcpp::IntegerVector seednum_, 
+                           Rcpp::IntegerVector twosided_, 
+                           Rcpp::IntegerVector boundedminpval_){
 
     // copy to double vectors
     std::vector<double> X( X_.begin(), X_.end() );
@@ -239,11 +254,16 @@ Rcpp::List eummd_pval_Rcpp(Rcpp::NumericVector X_,
     double beta = Rcpp::as<double> (beta_);
     int numperm = Rcpp::as<int> (numperm_);
     int seednum = Rcpp::as<int> (seednum_);
+    int twosided = Rcpp::as<int> (twosided_);
+    int boundedminpval = Rcpp::as<int> (boundedminpval_);
 
 
     // get stat, pval and beta from cpp_eummd
+    // twosided==0 means alternative is greater
     std::vector<double> pvalstatbeta = cpp_eummd_pval_faster(X, Y, beta, 
-                                                             numperm, seednum);
+                                                             numperm, seednum,
+                                                             twosided,
+                                                             boundedminpval);
 
     double pval = pvalstatbeta[0];
     double stat = pvalstatbeta[1];
@@ -300,7 +320,9 @@ Rcpp::List meammd_proj_pval_Rcpp(Rcpp::NumericVector X,
                                  Rcpp::IntegerVector numperm_,
                                  Rcpp::IntegerVector numproj_,
                                  Rcpp::IntegerVector seednum_,
-                                 Rcpp::NumericVector beta_){
+                                 Rcpp::NumericVector beta_, 
+                                 Rcpp::IntegerVector twosided_,
+                                 Rcpp::IntegerVector boundedminpval_){
 
     int nX = Rcpp::as<int> (nX_);
     int dX = Rcpp::as<int> (dX_);
@@ -310,6 +332,8 @@ Rcpp::List meammd_proj_pval_Rcpp(Rcpp::NumericVector X,
     int numproj = Rcpp::as<int> (numproj_);
     int seednum =  Rcpp::as<int> (seednum_);
     double beta = Rcpp::as<double> (beta_);
+    int twosided = Rcpp::as<int> (twosided_);
+    int boundedminpval = Rcpp::as<int> (boundedminpval_);
     std::vector<double> pvalstat =  cpp_meammd_proj_pval_faster(X.begin(), 
                                                                 Y.begin(), 
                                                                 nX, dX,
@@ -317,7 +341,9 @@ Rcpp::List meammd_proj_pval_Rcpp(Rcpp::NumericVector X,
                                                                 numperm, 
                                                                 numproj,
                                                                 seednum, 
-                                                                beta);
+                                                                beta, 
+                                                                twosided,
+                                                                boundedminpval);
     // pval is the first element
     // stat is the second element
     double pval = pvalstat[0];
@@ -339,7 +365,9 @@ double meammd_dist_pval_Rcpp(Rcpp::NumericVector X,
                              Rcpp::IntegerVector seednum_,
                              Rcpp::NumericVector beta_, 
                              Rcpp::NumericVector pmethod_, 
-                             Rcpp::NumericVector nmethod_){
+                             Rcpp::NumericVector nmethod_,
+                             Rcpp::IntegerVector twosided_,
+                             Rcpp::IntegerVector boundedminpval_){
 
     int nX = Rcpp::as<int> (nX_);
     int dX = Rcpp::as<int> (dX_);
@@ -350,6 +378,8 @@ double meammd_dist_pval_Rcpp(Rcpp::NumericVector X,
     double beta = Rcpp::as<double> (beta_);
     int pmethod = Rcpp::as<int> (pmethod_);
     int nmethod = Rcpp::as<int> (nmethod_);
+    int twosided = Rcpp::as<int> (twosided_);
+    int boundedminpval = Rcpp::as<int> (boundedminpval_);
 
 
     double pval = cpp_meammd_dist_pval(X.begin(), 
@@ -360,7 +390,9 @@ double meammd_dist_pval_Rcpp(Rcpp::NumericVector X,
                                        seednum, 
                                        beta, 
                                        pmethod, 
-                                       nmethod);
+                                       nmethod, 
+                                       twosided,
+                                       boundedminpval);
 
     return(pval);
 }
@@ -397,7 +429,9 @@ Rcpp::List energydist_pval_Rcpp(Rcpp::NumericVector X,
                                 Rcpp::IntegerVector nY_, 
                                 Rcpp::IntegerVector dY_,
                                 Rcpp::IntegerVector numperm_,
-                                Rcpp::IntegerVector seednum_){
+                                Rcpp::IntegerVector seednum_, 
+                                Rcpp::IntegerVector twosided_, 
+                                Rcpp::IntegerVector boundedminpval_){
 
     // convert Rcpp types to primitive types
     int nX = Rcpp::as<int> (nX_);
@@ -406,11 +440,15 @@ Rcpp::List energydist_pval_Rcpp(Rcpp::NumericVector X,
     int dY = Rcpp::as<int> (dY_);
     int numperm = Rcpp::as<int> (numperm_);
     int seednum = Rcpp::as<int> (seednum_);
+    int twosided = Rcpp::as<int> (twosided_);
+    int boundedminpval = Rcpp::as<int> (boundedminpval_);
 
     // call C++ function; double*s use pointer; returns vector of two elements
     std::vector<double> pvalstat = cpp_energydist_pval(X.begin(), Y.begin(), 
                                                        nX, dX, nY, dY, 
-                                                       numperm, seednum);
+                                                       numperm, seednum,
+                                                       twosided, 
+                                                       boundedminpval);
     // extract to doubles
     double pval = pvalstat[0];
     double stat = pvalstat[1];
