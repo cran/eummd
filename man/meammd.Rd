@@ -16,7 +16,8 @@ meammd(
   numperm = 200,
   seednum = 0,
   alternative = c("greater", "two.sided"),
-  allowzeropval = FALSE
+  allowzeropval = FALSE,
+  faster = TRUE
 )
 }
 \arguments{
@@ -70,6 +71,9 @@ a threshold of \code{0.5 / (numperm+1)} is used,
 and if the computed p-value is less than this
 threshold, it is then set to be this value.
 this avoids the possibility of zero p-values.}
+
+\item{faster}{A boolean, specifying if to use faster algorithm
+when computing p-value. Default is \code{TRUE}.}
 }
 \value{
 A list with the following elements:

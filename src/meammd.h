@@ -31,5 +31,14 @@ double cpp_meammd_proj_stat(double* X, double* Y,
                             double beta);
 
 
+std::vector<double> cpp_meammd_proj_pval(double* X, double* Y, 
+                        int nX, int dX,
+                        int nY, int dY,
+                        int numperm, 
+                        int numproj,
+                        int seednum, 
+                        double beta);
+
+
 #endif
 

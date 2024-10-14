@@ -56,6 +56,10 @@
 #'                      threshold, it is then set to be this value.
 #'                      this avoids the possibility of zero p-values.
 #'
+#' @param faster A boolean, specifying if to use faster algorithm
+#'               when computing p-value. Default is \code{TRUE}.
+#'
+#'
 #' @return A list with the following elements:
 #'         \describe{
 #'             \item{\code{pval}}{The p-value of the test, if it is  
@@ -85,7 +89,8 @@
 meammd <- function(X, Y, beta=-0.1, pval=TRUE, 
                    type=c("proj", "dist"), numproj=20, nmethod=c(2, 1),
                    distpval=c("Hommel", "Fisher"), numperm=200, seednum=0, 
-                   alternative=c("greater", "two.sided"), allowzeropval=FALSE){
+                   alternative=c("greater", "two.sided"), allowzeropval=FALSE, 
+                   faster=TRUE){
 
     # check vectors/matrices are numeric
     if ( !(is.numeric(X)) && !(is.matrix(X)) ){
@@ -159,6 +164,10 @@ meammd <- function(X, Y, beta=-0.1, pval=TRUE,
     if (allowzeropval==TRUE)
         boundminpval <- 0
 
+    fasterInt <- 1
+    if (faster==TRUE)
+        fasterInt <- 0
+
 
     # flatten to vectors;  we use transpose
     # > X
@@ -185,7 +194,8 @@ meammd <- function(X, Y, beta=-0.1, pval=TRUE,
                                                 seednum, 
                                                 beta, 
                                                 twosided, 
-                                                boundminpval)
+                                                boundminpval, 
+                                                fasterInt)
         } else {
             stat <- meammd_proj_Rcpp(Xvec, 
                                      Yvec,

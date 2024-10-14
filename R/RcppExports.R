@@ -37,8 +37,8 @@ meammd_proj_Rcpp <- function(X, Y, nX_, dX_, nY_, dY_, numproj_, seednum_, beta_
     .Call(`_eummd_meammd_proj_Rcpp`, X, Y, nX_, dX_, nY_, dY_, numproj_, seednum_, beta_)
 }
 
-meammd_proj_pval_Rcpp <- function(X, Y, nX_, dX_, nY_, dY_, numperm_, numproj_, seednum_, beta_, twosided_, boundedminpval_) {
-    .Call(`_eummd_meammd_proj_pval_Rcpp`, X, Y, nX_, dX_, nY_, dY_, numperm_, numproj_, seednum_, beta_, twosided_, boundedminpval_)
+meammd_proj_pval_Rcpp <- function(X, Y, nX_, dX_, nY_, dY_, numperm_, numproj_, seednum_, beta_, twosided_, boundedminpval_, faster_) {
+    .Call(`_eummd_meammd_proj_pval_Rcpp`, X, Y, nX_, dX_, nY_, dY_, numperm_, numproj_, seednum_, beta_, twosided_, boundedminpval_, faster_)
 }
 
 meammd_dist_pval_Rcpp <- function(X, Y, nX_, dX_, nY_, dY_, numperm_, seednum_, beta_, pmethod_, nmethod_, twosided_, boundedminpval_) {

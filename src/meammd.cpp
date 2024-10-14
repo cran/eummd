@@ -391,10 +391,11 @@ std::vector<double> cpp_meammd_proj_pval_faster(double* X, double* Y,
         Yend = Zproj.end();
 
         //Compute all MMD_vec's 
-        MMDbar_vec = cpp_meammd_proj_pval_faster_sub(Xstart, Xend, 
-                                                     Ystart, Yend, 
-                                                     numperm, seednum);
-        // update MMDbar's
+        //update MMD_vec - DO NOT use MMDbar_vec
+        MMD_vec = cpp_meammd_proj_pval_faster_sub(Xstart, Xend, 
+                                                  Ystart, Yend, 
+                                                  numperm, seednum);
+        // update MMDbar using MMD_vec
         ++n;
         update_mean_vec(MMDbar_vec, MMD_vec, n);
     }
@@ -406,13 +407,17 @@ std::vector<double> cpp_meammd_proj_pval_faster(double* X, double* Y,
     for (std::vector<double>::const_iterator itMMD = MMD_vec.begin()+1; 
          itMMD != MMD_vec.end(); ++itMMD){
 
-        if (MMDbar < *itMMD){
+        if (*itMMD < MMDbar){
             ++MMD_count_below;
         }
     }
 
     //now return the threshold
     double pval = MMD_count_below / (numperm + 1.0);
+
+    //make one-sided
+    // pval = convertTwoSidedPvalueToOneSided(pval);
+    //pval =  1 - std::abs(1 - 2*pval) ;
 
     //make one-sided
     //twosided = 0 means false
@@ -438,6 +443,7 @@ std::vector<double> cpp_meammd_proj_pval_faster(double* X, double* Y,
     returnvec.push_back(MMDbar);
     return(returnvec);
 }
+
 
 
 /* FastMMD calculation with cpp sort
@@ -801,4 +807,167 @@ double cpp_meammd_proj_stat(double* X, double* Y,
         MMDbar = update_mean(MMDbar, MMDval, j+1);
     }
     return MMDbar;
+}
+
+
+
+/**
+ * Compute MMD with multiple projections; no shuffling
+ *
+ * Generate projection vector, project, find mmd
+ *
+ * Need to pass gen by reference...
+ */
+double cpp_meammd_mult_proj(std::vector<double> Z, 
+                        int nX, 
+                        int nY,
+                        int dZ,
+                        int numproj, 
+                        double beta, 
+                        std::default_random_engine& gen){
+
+
+    // just for intialisation
+    // u vector generation
+    std::vector<double> u = unifSd(dZ, gen);
+    std::vector<double> Zproj = projection(Z, nX+nY, dZ, u);
+
+    // MMD for this trial, and average MMD
+    double MMDbar = 0.0;
+    double MMDval = 0.0;
+
+    for (int j=0; j < numproj; ++j){
+        //get projection trial
+        u = unifSd(dZ, gen);
+        Zproj = projection(Z, nX+nY, dZ, u);
+
+        // compute emmd
+        MMDval = emmd_ptr_alt_MH(Zproj.begin(), nX, nY, beta);
+        MMDbar = update_mean(MMDbar, MMDval, j+1);
+    }
+    return MMDbar;
+}
+
+
+
+/**
+ * Shuffling matrix
+ *
+ * in vector form, and shuffling rows
+ * Probably can do more efficiently.
+ * The & let's the vector be modified, and changes in place will be returned.
+ */
+void shufflematrix(std::vector<double> &Z, int n, int d, std::vector<int> Zindex){
+    //make copy
+    std::vector<double> Zcopy(Z);
+
+    // now shuffle the n ROWS of length d
+    for (int i=0; i < n; ++i){
+        for (int j=0; j < d; ++j){
+            Z.at(i*d+j) = Zcopy.at(  Zindex.at(i)*d+j   );
+        }
+    }
+    // returned by ref
+} // end of shufflematrix
+
+
+/*
+ * Compute pval MMD with multiple projections
+ * Other version will use distance
+ *
+ * Need to shuffle matrix
+ */
+std::vector<double> cpp_meammd_proj_pval(double* X, double* Y, 
+                                         int nX, int dX,
+                                         int nY, int dY,
+                                         int numperm, 
+                                         int numproj,
+                                         int seednum, 
+                                         double beta){
+
+
+    // return vector is first pval, then statistic
+    // there is no beta, because that depends on each projection
+    std::vector<double> returnvec;
+
+    if (dX != dY){
+        //error, dimensions incorrect
+        returnvec.push_back(-2.0); 
+        returnvec.push_back(-2.0);
+        return returnvec;
+    }
+
+    size_t dZ = dX;
+
+    //int should really be size_t
+    size_t Xsize = nX*dX;
+    size_t Ysize = nY*dY;
+    size_t Zsize = Xsize + Ysize;
+    size_t nZ = nX + nY;
+
+    // create vector for matrix
+    std::vector<double> Z;
+    Z.reserve(Zsize);
+    //insert X then Y
+    Z.insert(Z.end(), &X[0], &X[0]+Xsize);
+    Z.insert(Z.end(), &Y[0], &Y[0]+Ysize);
+
+    //now create indices 0, 1, ..., n-1
+    // these will be 
+    std::vector<int> Zindex(nX + nY);
+    std::iota(Zindex.begin(), Zindex.end(), 0);
+
+    // initiate random generator
+    std::random_device rd;
+    std::mt19937 g;
+    // set the seed, if greater than 0
+    if (seednum > 0){
+        g.seed(seednum);
+    } else {
+        g.seed(rd());
+    }
+
+    // create generator for projections
+    //std::default_random_engine gen(seednum);
+    std::default_random_engine gen;
+    if (seednum > 0){
+        gen.seed(seednum);
+    } else {
+        gen.seed(rd());
+    }
+
+
+    //get the MMD value for this split, with random projections
+    double MMDstarbar = cpp_meammd_mult_proj(Z, nX, nY, dZ, numproj, beta, gen);
+
+    double MMDperm = 0.0;
+    int MMD_count_below = 1;
+
+    //run the permutations
+    for (int i=0; i < numperm; ++i){
+        //shuffle index vector
+        std::shuffle(Zindex.begin(), Zindex.end(), g);
+        //shuffle matrix according to index
+        shufflematrix(Z, nZ, dZ, Zindex);
+
+        //compute MMD from projections for shuffled matrix
+        //MMDperm = cpp_meammd_mult_proj(Z, nX, nY, dZ, numproj, beta, gen);
+        MMDperm = cpp_meammd_mult_proj(Z, nX, nY, dZ, numproj, beta, gen);
+
+        if (MMDperm < MMDstarbar){
+            ++MMD_count_below;
+        }
+    }
+
+    //now return the threshold
+    double pval = MMD_count_below / (numperm + 1.0);
+
+    //make one-sided
+    // pval = convertTwoSidedPvalueToOneSided(pval);
+    pval =  1 - std::abs(1 - 2*pval) ;
+//     return pval;
+
+    returnvec.push_back(pval);
+    returnvec.push_back(MMDstarbar);
+    return(returnvec);
 }

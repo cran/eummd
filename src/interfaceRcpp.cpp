@@ -322,7 +322,8 @@ Rcpp::List meammd_proj_pval_Rcpp(Rcpp::NumericVector X,
                                  Rcpp::IntegerVector seednum_,
                                  Rcpp::NumericVector beta_, 
                                  Rcpp::IntegerVector twosided_,
-                                 Rcpp::IntegerVector boundedminpval_){
+                                 Rcpp::IntegerVector boundedminpval_, 
+                                 Rcpp::IntegerVector faster_){
 
     int nX = Rcpp::as<int> (nX_);
     int dX = Rcpp::as<int> (dX_);
@@ -334,16 +335,29 @@ Rcpp::List meammd_proj_pval_Rcpp(Rcpp::NumericVector X,
     double beta = Rcpp::as<double> (beta_);
     int twosided = Rcpp::as<int> (twosided_);
     int boundedminpval = Rcpp::as<int> (boundedminpval_);
-    std::vector<double> pvalstat =  cpp_meammd_proj_pval_faster(X.begin(), 
-                                                                Y.begin(), 
-                                                                nX, dX,
-                                                                nY, dY,
-                                                                numperm, 
-                                                                numproj,
-                                                                seednum, 
-                                                                beta, 
-                                                                twosided,
-                                                                boundedminpval);
+    int faster = Rcpp::as<int> (faster_);
+    std::vector<double> pvalstat;
+    if (faster == 0){
+        pvalstat = cpp_meammd_proj_pval_faster(X.begin(), 
+                                               Y.begin(), 
+                                               nX, dX,
+                                               nY, dY,
+                                               numperm, 
+                                               numproj,
+                                               seednum, 
+                                               beta, 
+                                               twosided,
+                                               boundedminpval);
+    } else {
+        pvalstat = cpp_meammd_proj_pval(X.begin(), 
+                                        Y.begin(), 
+                                        nX, dX,
+                                        nY, dY,
+                                        numperm, 
+                                        numproj,
+                                        seednum, 
+                                        beta);
+    }
     // pval is the first element
     // stat is the second element
     double pval = pvalstat[0];

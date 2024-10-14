@@ -161,8 +161,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // meammd_proj_pval_Rcpp
-Rcpp::List meammd_proj_pval_Rcpp(Rcpp::NumericVector X, Rcpp::NumericVector Y, Rcpp::IntegerVector nX_, Rcpp::IntegerVector dX_, Rcpp::IntegerVector nY_, Rcpp::IntegerVector dY_, Rcpp::IntegerVector numperm_, Rcpp::IntegerVector numproj_, Rcpp::IntegerVector seednum_, Rcpp::NumericVector beta_, Rcpp::IntegerVector twosided_, Rcpp::IntegerVector boundedminpval_);
-RcppExport SEXP _eummd_meammd_proj_pval_Rcpp(SEXP XSEXP, SEXP YSEXP, SEXP nX_SEXP, SEXP dX_SEXP, SEXP nY_SEXP, SEXP dY_SEXP, SEXP numperm_SEXP, SEXP numproj_SEXP, SEXP seednum_SEXP, SEXP beta_SEXP, SEXP twosided_SEXP, SEXP boundedminpval_SEXP) {
+Rcpp::List meammd_proj_pval_Rcpp(Rcpp::NumericVector X, Rcpp::NumericVector Y, Rcpp::IntegerVector nX_, Rcpp::IntegerVector dX_, Rcpp::IntegerVector nY_, Rcpp::IntegerVector dY_, Rcpp::IntegerVector numperm_, Rcpp::IntegerVector numproj_, Rcpp::IntegerVector seednum_, Rcpp::NumericVector beta_, Rcpp::IntegerVector twosided_, Rcpp::IntegerVector boundedminpval_, Rcpp::IntegerVector faster_);
+RcppExport SEXP _eummd_meammd_proj_pval_Rcpp(SEXP XSEXP, SEXP YSEXP, SEXP nX_SEXP, SEXP dX_SEXP, SEXP nY_SEXP, SEXP dY_SEXP, SEXP numperm_SEXP, SEXP numproj_SEXP, SEXP seednum_SEXP, SEXP beta_SEXP, SEXP twosided_SEXP, SEXP boundedminpval_SEXP, SEXP faster_SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -178,7 +178,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type beta_(beta_SEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type twosided_(twosided_SEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type boundedminpval_(boundedminpval_SEXP);
-    rcpp_result_gen = Rcpp::wrap(meammd_proj_pval_Rcpp(X, Y, nX_, dX_, nY_, dY_, numperm_, numproj_, seednum_, beta_, twosided_, boundedminpval_));
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type faster_(faster_SEXP);
+    rcpp_result_gen = Rcpp::wrap(meammd_proj_pval_Rcpp(X, Y, nX_, dX_, nY_, dY_, numperm_, numproj_, seednum_, beta_, twosided_, boundedminpval_, faster_));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -252,7 +253,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_eummd_eummd_Rcpp", (DL_FUNC) &_eummd_eummd_Rcpp, 3},
     {"_eummd_eummd_pval_Rcpp", (DL_FUNC) &_eummd_eummd_pval_Rcpp, 7},
     {"_eummd_meammd_proj_Rcpp", (DL_FUNC) &_eummd_meammd_proj_Rcpp, 9},
-    {"_eummd_meammd_proj_pval_Rcpp", (DL_FUNC) &_eummd_meammd_proj_pval_Rcpp, 12},
+    {"_eummd_meammd_proj_pval_Rcpp", (DL_FUNC) &_eummd_meammd_proj_pval_Rcpp, 13},
     {"_eummd_meammd_dist_pval_Rcpp", (DL_FUNC) &_eummd_meammd_dist_pval_Rcpp, 13},
     {"_eummd_energydist_Rcpp", (DL_FUNC) &_eummd_energydist_Rcpp, 6},
     {"_eummd_energydist_pval_Rcpp", (DL_FUNC) &_eummd_energydist_pval_Rcpp, 10},
